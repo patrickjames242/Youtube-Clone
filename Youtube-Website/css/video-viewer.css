@@ -1,0 +1,436 @@
+
+main{
+	max-width: 1750px;
+	margin-left: auto;
+	margin-right: auto;
+	
+}
+
+.sections-holder{
+	display: flex;
+	align-items: flex-start;
+	margin: 20px;
+}
+
+.sections-holder-child{
+	flex: 1;
+}
+
+
+
+
+
+
+
+/* video section */
+
+.video-section{
+	min-width: 450px;
+}
+
+.video-box-holder{
+	width: 100%;
+	padding-top: 56.25%;
+	position: relative;
+}
+
+.video-box{
+	background-color: black;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+/* -----------------------*/
+
+
+
+
+
+
+
+
+/* recommended videos section */
+
+.recommended-videos-section{
+	
+	display: grid;
+	grid-gap: 10px;
+	
+}
+
+/* this class is added to the recommended-videos-section
+when it is displayed at the bottom of the video as opposed to the side */
+
+.recommended-videos-section-whenOnBottom{
+	margin-top: 20px;
+}
+
+/* this class is added to the recommended-videos-section
+when it is displayed at side of the video as apposed to the bottom */
+
+.recommended-videos-section-whenOnSide{
+	margin-left: 20px;
+	max-width: 360px;
+}
+
+.recommended-video-box{
+	display: flex;
+}
+
+.recommended-video-thumbnail{
+	background-color: black;
+
+	--height: 85px;
+	height: var(--height);
+	width: calc((16/9) * var(--height));
+	flex-shrink: 0;
+	position: relative;
+}
+
+.recommended-video-thumbnail > img{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.recommended-video-info-box{
+	margin-left: 10px;
+	font-size: 13.5px;
+}
+
+.recommended-video-info-box *{
+	margin-bottom: 5px;
+}
+
+/*----------------------------*/
+
+
+
+/* video title box */
+
+.video-title-box{
+	padding: 20px 0;
+	position: relative;
+}
+
+.video-title-box > .title{
+	margin-bottom: 10px;
+	font-size: 17px;
+}
+
+.video-title-box > .views{
+	font-size: 15px;
+}
+
+
+
+.video-title-box .bottom-right-content-box{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	height: 50px;
+
+	display: grid;
+	grid-auto-flow: column;
+	grid-gap: 30px;
+}
+
+.video-title-box .watch-on-youtube-link{
+	align-self: center;
+	font-weight: 500;
+}
+
+.video-title-box .like-dislike-box{
+	display: grid;
+	grid-auto-flow: column;
+	grid-gap: 20px;
+	align-self: stretch;
+	
+	box-shadow: inset 0 -2px 0 rgb(144, 144, 144);
+
+}
+
+.video-title-box .like-dislike-box > div{
+	display: grid;
+	grid-auto-flow: column;
+	grid-gap: 10px;
+	align-items: center;
+}
+
+.video-title-box .like-dislike-box .icon{
+	width: 20px;
+	height: 20px;
+}
+
+
+
+.video-title-box .like-dislike-box .icon > svg{
+	fill: rgb(144, 144, 144);
+}
+
+.video-title-box .like-dislike-box .num{
+	font-size: 13px;
+	font-weight: 500;
+	color: rgb(90, 90, 90);
+}
+
+
+/* ------------------*/
+
+
+
+/* video description box */
+
+.video-description-box{
+	padding: 20px 0;
+	
+}
+
+.video-description-box > .channel-info{
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+	position: relative;
+}
+
+.video-description-box > .channel-info > .channel-image{
+	width: 50px;
+	height: 50px;
+	border-radius: 25px;
+	border: 0px solid transparent;
+	background-color: black;
+	position: relative;
+	overflow: hidden;
+}
+.video-description-box > .channel-info > .channel-image > img{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+}
+
+
+
+.video-description-box > .channel-info > .text-box{
+	margin-left: 15px;
+}
+
+.video-description-box > .channel-info > .text-box > .channel-name{
+	font-size: 15px;
+}
+
+.video-description-box > .channel-info > .text-box > .publish-date{
+	font-size: 13px;
+	margin-top: 5px;
+}
+
+.video-description-box > .channel-info > .subscribe-button{
+	background-color: rgb(204, 0, 0);
+	padding: 10px 12px;
+	border: 1px solid transparent;
+	border-radius: 2.5px;
+	font-size: 13px;
+	color: white;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	text-transform: uppercase;
+}
+
+.video-description-box > .description-text{
+
+	--line-height: 1.5;
+	--font-size: 13.5px;
+
+
+	margin-left: 65px;
+	font-size: var(--font-size);
+	line-height: var(--line-height);
+
+	max-width: 675px;
+	white-space: pre-line;
+	overflow: hidden;
+	
+}
+
+.video-description-box >.description-text.collapsed{
+	max-height: calc(var(--line-height) * var(--font-size) * 3);
+}
+
+
+
+.video-description-box .show-more-button{
+	
+	font-weight: 500;
+	margin-left: 65px;
+	margin-top: 20px;
+	
+	display: inline-block;
+}
+
+
+
+/*----------------*/
+
+
+/* video reviews */
+
+/* add a comment box*/
+.video-reviews{
+	margin-top: 20px;
+}
+
+.video-reviews > .num-of-comments{
+	font-size: 15px;
+}
+
+.video-reviews > .add-comment-box{
+	display: flex;
+	margin-top: 20px;
+}
+
+.video-reviews > .add-comment-box > .profile-image{
+	width: 40px;
+	height: 40px;
+	background-color: black;
+	border-radius: 20px;
+	border: 0px solid translucent; 
+}
+
+.video-reviews > .add-comment-box > .add-comment-text{
+	font-size: 13px;
+	flex: 1;
+	align-self: flex-start;
+	margin-left: 15px;
+	margin-top: 3px;
+	padding-bottom: 7px;
+}
+
+/*-------------------*/
+
+
+/* user comment box */
+
+.video-reviews .user-comment-box{
+	display: flex;
+	margin-top: 20px;
+}
+
+.video-reviews .user-comment-box > .profile-image{
+	width: 40px;
+	height: 40px;
+	background-color: black;
+	border-radius: 20px;
+	border: 0px solid translucent;
+	align-self: flex-start;
+	position: relative;
+	overflow: hidden;
+}
+
+.video-reviews .user-comment-box > .profile-image > img{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+}
+
+.video-reviews .user-comment-box .right-content{
+	flex: 1;
+	margin-left: 15px;
+}
+
+
+
+.video-reviews .user-comment-box .top-text > .name{
+	font-weight: 500;
+	font-size: 13px
+}
+
+.video-reviews .user-comment-box .top-text > .time{
+	font-size: 12px;
+	margin-left: 7px;
+}
+
+.video-reviews .user-comment-box .review-text{
+
+	--line-height: 1.5;
+	--font-size: 13px;
+
+	margin-top: 5px;
+	font-size: var(--font-size);
+	line-height: var(--line-height);
+	max-width: 675px;
+	white-space: pre-line;
+	overflow: hidden;
+}
+
+.video-reviews .user-comment-box .review-text.collapsed{
+	max-height: calc(var(--line-height) * var(--font-size) * 4);
+}
+
+.video-reviews .user-comment-box .read-more-button{
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.video-reviews .user-comment-box .like-dislike-buttons{
+	display: flex;
+	margin-top: 10px;
+	align-items: center;
+}
+.video-reviews .user-comment-box svg{
+	fill: rgb(144, 144, 144);
+}
+
+.video-reviews .user-comment-box .num-of-likes{
+	margin-left: 5px;
+	font-size: 12px;
+	color: rgb(144, 144, 144);
+}
+
+.video-reviews .user-comment-box  .like-dislike-button{
+	width: 15px;
+	height: 15px;
+}
+
+.video-reviews .user-comment-box .dislike-button{
+	margin-left: 10px;
+}
+
+.video-reviews .user-comment-box .reply-button{
+	margin-left: 13px;
+	font-size: 14px
+}
+
+.video-reviews .user-comment-box .view-replies-button{
+	margin-top: 10px;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.video-reviews .user-comment-box .loading-indicator{
+	--size: 25px;
+	margin-top: 20px;
+
+}
+
+.video-reviews .user-comment-box .replies-box .user-comment-box .profile-image{
+	width: 24px;
+	height: 24px;
+}
+
+/*-----------------*/
+
+/*-------------------*/
+

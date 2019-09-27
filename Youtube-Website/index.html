@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Youtube</title>
+
+	<link rel="stylesheet" type="text/css" href="css/global-style.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+
+	<script src="javascript/libraries/clamp.js"></script>
+	<script src="javascript/svg-icons.js"></script>
+	<script src="javascript/helpers.js"></script>
+	<script src="javascript/youtube-api.js"></script>
+	<script src="javascript/index.js"></script>
+</head>
+
+<body>
+
+	<header>
+
+		<div class="header-content">
+
+			<div class="left-content">
+				<div class="menu-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.menuButton().writeToDocument();
+					</script>
+				</div>
+				<a href="index.html" class="youtube-logo">
+					<script>
+						SVGIcons.youtubeLogo().writeToDocument();
+					</script>
+				</a>
+			</div>
+			<div class="center-content">
+				<div class="search-box-container">
+					<div class="search-box">
+						<form action="search-results.html">
+								<input type="search" placeholder="Search" size="1" class="search-placeholder subtitle" name="searchText">
+						</form>
+						
+						<div class="search-button-box">
+							<div class="search-icon">
+								<script>
+									SVGIcons.searchIcon().writeToDocument();
+								</script>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+			
+
+			<div class="right-content">
+
+				<div class="search-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.searchIcon().writeToDocument();
+					</script>
+				</div>
+
+				<div class="apps-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.youtubeAppsIcon().writeToDocument();
+					</script>
+				</div>
+				
+				<div class="notifications-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.notificationsAppIcon().writeToDocument();
+					</script>
+				</div>
+				
+				<div class="sign-in-button unsupported-feature-button">
+					<div class="icon">  
+						<script>SVGIcons.signInButtonIcon().writeToDocument();</script>
+					</div>
+					<p class="text">sign in</p>
+				</div>
+			</div>
+
+		</div>
+
+	</header>
+
+	<div class="side-bar">
+
+		<div class="wide-content">
+
+			<div class="cell-segment underlined">
+				<script>		
+					// if the label title is only one word, the iconMethodName will be provided with a default value; however, if it is two words, the caller is responsible for providing the specific method name that will produce the icon svg markup
+					function writeIconCellToDocument(labelTitle) {
+						const iconMethodName = String(labelTitle).toLowerCase() + "Icon";
+						
+						const html = String.raw`
+							<div class="cell padded-cell">
+								<div class="icon">
+									${SVGIcons[iconMethodName]()}
+								</div>
+								<p class="label">${labelTitle}</p>
+							</div>
+						`;
+						document.write(html);
+					}
+
+					[
+						"Home",
+						"Trending",
+						"Subscriptions"
+					].forEach((string) => {
+						writeIconCellToDocument(string);
+					})
+
+				</script>
+
+			</div>
+
+			<div class="cell-segment underlined">
+				<script>
+					writeIconCellToDocument("Library");
+					writeIconCellToDocument("History");
+				</script>
+			</div>
+
+			<div class="sign-in-segment cell-segment underlined padded-cell">
+				<p class="text">Sign in to like videos, comment, and subscribe.</p>
+				<div class="sign-in-button unsupported-feature-button">
+					<div class="icon">  
+						<script>SVGIcons.signInButtonIcon().writeToDocument();</script>
+					</div>
+					<p class="text">sign in</p>
+				</div>
+			</div>
+
+
+			<div class="footer-cell-segment cell-segment padded-cell">
+				<div class="links links1">
+					<span class="link">About</span>
+					<span class="link">Press</span>
+					<span class="link">Copyright</span>
+					<span class="link">Contact us</span>
+					<span class="link">Creators</span>
+					<span class="link">Advertise</span>
+					<span class="link">Developers</span>
+				</div>
+
+				<div class="links links2">
+					<span class="link">Terms</span>
+					<span class="link">Privacy</span>
+					<span class="link">Policy & Safety</span>
+					<span class="link">Test new features</span>
+				</div>
+
+				<div class="copyright-info subtitle">&#169; 2019 YouTube, LLC</div>
+
+			</div>
+
+		</div>
+		<div class="narrow-content">
+
+			<div class="cell">
+				<div class="icon">
+					<script>
+						SVGIcons.homeIcon().writeToDocument();
+					</script>
+				</div>
+				<p class="label">Home</p>
+			</div>
+
+			<div class="cell">
+				<div class="icon">
+					<script>
+						SVGIcons.trendingIcon().writeToDocument();
+					</script>
+				</div>
+				<p class="label">Trending</p>
+			</div>
+
+			<div class="cell">
+				<div class="icon">
+					<script>
+						SVGIcons.subscriptionsIcon().writeToDocument();
+					</script>
+				</div>
+				<p class="label">Subscriptions</p>
+			</div>
+
+			<div class="cell">
+				<div class="icon">
+					<script>
+						SVGIcons.libraryIcon().writeToDocument();
+					</script>
+				</div>
+				<p class="label">Library</p>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+	<main>
+
+		<div class="recommended-videos-container">
+			<div class="recommended-title">
+				<p>Recommended</p>
+			</div>
+			
+			<script>
+				function getRecommendedVideoBoxHtml(video) {
+					return String.raw`
+					<a href="${getLinkToVideoViewerFile(video.id)}" class="recommended-video-box">
+						<div class="thumbnail-box">
+						<img src="${video.thumbnailURL}">				
+						</div>
+						<div class="video-details">
+							<p class="video-title clamp" data-max-lines="2">${video.title}.</p>
+							<div class="subtitles">
+								<p class="channel-name subtitle clamp" data-max-lines="1">${video.channelTitle}</p>
+								<p class="views-date subtitle">${getShortNumberStringFrom(video.numOfViews)} views · ${getTimeSinceDateStringFrom(video.publishedAtDate)}</p>
+							</div>
+						</div>
+					</a>
+					`;
+				}
+			</script>
+
+		</div>
+
+	</main>
+
+</body>
+
+</html>

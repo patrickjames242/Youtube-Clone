@@ -1,0 +1,87 @@
+main{
+    padding: 20px;
+    
+}
+
+.main-content{
+    max-width: 1276px;
+    margin: 0 auto;
+    
+}
+
+.search-results-holder{
+    
+    max-width: 862px;
+    display: grid;
+    grid-gap: 15px;
+    
+}
+
+.search-results-holder > .cell{
+
+    --cell-height: 138px;
+    height: var(--cell-height);
+
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 10px;
+    grid-template-columns: auto 1fr;
+    
+}
+
+.search-results-holder > .cell .thumbnail-holder{
+    background-color: black;
+    height: 100%;
+    width: calc(var(--cell-height) * (16/9));
+    position: relative;
+}
+
+.search-results-holder > .cell .thumbnail-holder img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}   
+
+
+.search-results-holder > .cell .title{
+    font-size: 18px;
+    
+}
+
+/* .search-results-holder .info-box{
+    
+} */
+
+.search-results-holder > .cell .video-details,
+.search-results-holder > .cell .video-description{
+    font-size: 14px;
+    color: rgb(100, 100, 100);
+    
+}
+
+.search-results-holder > .cell .video-details{
+    margin-top: 5px;
+    
+    
+}
+
+.search-results-holder > .cell .video-description{
+    margin-top: 10px;
+    
+    overflow-wrap: break-word;
+    
+    hyphens: auto;
+}
+
+
+
+
+
+
+
+
+
+/* 1276 */

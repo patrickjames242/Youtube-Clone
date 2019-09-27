@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Youtube</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="css/global-style.css">
+	<link rel="stylesheet" type="text/css" href="css/video-viewer.css">
+
+
+	<script src="javascript/libraries/clamp.js"></script>
+	<script src="javascript/svg-icons.js"></script>
+	<script src="javascript/helpers.js"></script>
+	<script src="javascript/youtube-api.js"></script>
+	<script src="javascript/video-viewer.js"></script>
+
+</head>
+
+<body>
+
+	<header>
+
+		<div class="header-content">
+
+			<div class="left-content">
+				<div class="menu-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.menuButton().writeToDocument();
+					</script>
+				</div>
+				<a href="index.html" class="youtube-logo">
+					<script>
+						SVGIcons.youtubeLogo().writeToDocument();
+					</script>
+				</a>
+			</div>
+			<div class="center-content">
+				<div class="search-box-container">
+					<div class="search-box">
+						<form action="search-results.html">
+							<input type="search" placeholder="Search" size="1" class="search-placeholder subtitle"
+								name="searchText">
+						</form>
+
+						<div class="search-button-box">
+							<div class="search-icon">
+								<script>
+									SVGIcons.searchIcon().writeToDocument();
+								</script>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="right-content">
+
+				<div class="search-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.searchIcon().writeToDocument();
+					</script>
+				</div>
+
+				<div class="apps-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.youtubeAppsIcon().writeToDocument();
+					</script>
+				</div>
+
+				<div class="notifications-icon header-icon unsupported-feature-button">
+					<script>
+						SVGIcons.notificationsAppIcon().writeToDocument();
+					</script>
+				</div>
+
+				<div class="sign-in-button unsupported-feature-button">
+					<div class="icon">
+						<script>SVGIcons.signInButtonIcon().writeToDocument();</script>
+					</div>
+					<p class="text">sign in</p>
+				</div>
+			</div>
+
+		</div>
+
+	</header>
+
+	<main>
+		<div class="sections-holder">
+			<section class="video-section sections-holder-child">
+
+				<div class="video-box-holder">
+					<div class="video-box">
+						<div id="player">
+
+						</div>
+
+					</div>
+				</div>
+
+				<div class="video-title-box underlined">
+					<p class="title"> </p>
+					<p class="subtitle views"></p>
+
+
+					<div class="bottom-right-content-box">
+						<div class="like-dislike-box">
+							<div class="likes">
+								<div class="icon">
+									<script>SVGIcons.likeButton().writeToDocument();</script>
+								</div>
+								<p class="num"></p>
+							</div>
+							<div class="dislikes">
+								<div class="icon">
+									<script>SVGIcons.dislikeButton().writeToDocument();</script>
+								</div>
+								<p class="num"></p>
+							</div>
+						</div>
+
+						<a href="" class="watch-on-youtube-link uppercase-text-button" target="_target">Watch On
+							YouTube</a>
+					</div>
+
+				</div>
+
+				<div class="video-description-box underlined">
+					<div class="channel-info">
+						<div class="channel-image"></div>
+						<div class="text-box">
+							<p class="channel-name"></p>
+							<p class="publish-date subtitle"></p>
+						</div>
+						<div class="subscribe-button unsupported-feature-button">
+							<p>subscribe</p>
+						</div>
+					</div>
+					<p class="description-text collapsed"></p>
+
+					<div class="show-more-button uppercase-text-button" onclick="toggleDescriptionTextCollapsedState()">
+						Show More</div>
+				</div>
+
+				<div class="video-reviews">
+					<p class="num-of-comments"></p>
+
+					<div class="add-comment-box">
+						<img class="profile-image" src="images/blank_user.png">
+						<p class="add-comment-text subtitle underlined unsupported-feature-button">Add a public comment
+						</p>
+					</div>
+					
+				</div>
+			</section>
+
+			<section class="recommended-videos-section recommended-videos-section-whenOnSide sections-holder-child">
+
+				<script>
+					function getRecommendedVideoBoxFor(video) {
+						return String.raw`
+						<a href="video-viewer.html?videoID=${video.id}" class="recommended-video-box">
+							<div class="recommended-video-thumbnail">
+								<img src="${video.thumbnailURL}">
+							</div>
+							<div class="recommended-video-info-box">
+								<p class="recommended-video-title clamp" data-max-lines="2">${video.title}</p>
+								<p class="subtitle clamp" data-max-lines="1">${video.channelTitle}</p>
+								<p class="subtitle clamp" data-max-lines="1">${getShortNumberStringFrom(video.numOfViews)} views</p>
+							</div>
+						</a>
+						`;
+					}
+				</script>
+
+			</section>
+
+		</div>
+
+	</main>
+
+</body>
+
+</html>
