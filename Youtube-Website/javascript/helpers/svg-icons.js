@@ -1,7 +1,7 @@
 
 
 
-const SVGIcons = {
+export const SVGIcons = {
 
     youtubeLogo() {
         return String.raw`
@@ -150,6 +150,4 @@ const SVGIcons = {
 }
 
 
-String.prototype.writeToDocument = function () {
-    document.write(this);
-}
+

@@ -1,12 +1,19 @@
 
-
+import NetworkResponse from "./helpers/NetworkResponse.js"; 
 
 const ytAPIKey = "AIzaSyDvO-B0N8F6yG_Yh2_7PiEpp1r9dTHiiaE";
 
 // const ytAPIKey = "AIzaSyDXn6ZJ1Zi01Zlp8irQY0g_Z-WBgR7UDdc";
 
+export class YoutubeAPIListReponse{
+    constructor(itemList, previousPageToken, nextPageToken){
+        this.itemList = itemList;
+        this.previousPageToken = previousPageToken;
+        this.nextPageToken = nextPageToken;
+    }
+}
 
-class Video {
+export class Video {
 
     /// requires that the json have BOTH the snippet and statistics parts
     constructor(ytVideoJsonObject) {
@@ -34,23 +41,7 @@ class Video {
     }
 }
 
-class VideoAPIResponse{
-    constructor(videos, previousPageToken, nextPageToken){
-        this.videos = videos;
-        this.previousPageToken = previousPageToken;
-        this.nextPageToken = nextPageToken;
-    }
-}
-
-class VideoCommentAPIResponse{
-    constructor(comments, previousPageToken, nextPageToken){
-        this.videos = videos;
-        this.previousPageToken = previousPageToken;
-        this.nextPageToken = nextPageToken;
-    }
-}
-
-class VideoComment {
+export class VideoComment {
     constructor(ytCommentItem) {
         // console.log(ytCommentItem);
 
@@ -77,13 +68,12 @@ class VideoComment {
                 this.id = ytCommentItem.id;
                 this.numOfReplies = 0;
                 break;
-
         }
         // console.log(this);
     }
 }
 
-class Channel {
+export class Channel {
     constructor(ytChannelItem) {
         // console.log(ytChannelItem);
         this.id = ytChannelItem.id;
@@ -101,7 +91,7 @@ class Channel {
 }
 
 
-function getMostPopularYTVideos(numberOfVideos, completion) {
+export function getMostPopularYTVideos(numberOfVideos, completion) {
 
     numberOfVideos = Math.max(Math.min(numberOfVideos, 50), 1);
 
@@ -117,7 +107,7 @@ function getMostPopularYTVideos(numberOfVideos, completion) {
     });
 }
 
-function getVideoObjectForVideoID(videoID, completion) {
+export function getVideoObjectForVideoID(videoID, completion) {
     const url = String.raw`https://www.googleapis.com/youtube/v3/videos?key=${ytAPIKey}&part=id,snippet,statistics&id=${videoID}`;
     getJsonDataFromURL(url, (callback) => {
         const completionResult = callback.flatMapSuccess((result) => {
@@ -136,7 +126,7 @@ function getVideoObjectForVideoID(videoID, completion) {
 
 
 
-function getRecommendedVideosForVideoWithVideoID(videoId, numberOfVideos, completion) {
+export function getRecommendedVideosForVideoWithVideoID(videoId, numberOfVideos, completion) {
 
     numberOfVideos = Math.max(Math.min(numberOfVideos, 50), 1);
 
@@ -158,7 +148,7 @@ function getRecommendedVideosForVideoWithVideoID(videoId, numberOfVideos, comple
 
 
 
-function getCommentsForVideoWithVideoID(videoID, numberOfComments, completion) {
+export function getCommentsForVideoWithVideoID(videoID, numberOfComments, completion) {
 
     numberOfComments = Math.max(Math.min(numberOfComments, 100), 1);
 
@@ -174,7 +164,7 @@ function getCommentsForVideoWithVideoID(videoID, numberOfComments, completion) {
     });
 }
 
-function getRepliesToCommentWithCommentID(commentID, completion) {
+export function getRepliesToCommentWithCommentID(commentID, completion) {
     const url = String.raw`https://www.googleapis.com/youtube/v3/comments?key=${ytAPIKey}&part=snippet&parentId=${commentID}&maxResults=100`;
     getJsonDataFromURL(url, (callback) => {
         const newResult = callback.mapSuccess((result) => {
@@ -185,7 +175,7 @@ function getRepliesToCommentWithCommentID(commentID, completion) {
 }
 
 
-function getChannelForChannelID(channelID, completion) {
+export function getChannelForChannelID(channelID, completion) {
     const url = String.raw`https://www.googleapis.com/youtube/v3/channels?key=${ytAPIKey}&id=${channelID}&part=snippet,statistics`;
     getJsonDataFromURL(url, (callback) => {
         const response = callback.flatMapSuccess((result) => {
@@ -200,7 +190,7 @@ function getChannelForChannelID(channelID, completion) {
     });
 }
 
-function getSearchResultsForSearchText(searchText, numberOfResults, completion) {
+export function getSearchResultsForSearchText(searchText, numberOfResults, completion) {
     numberOfResults = Math.max(Math.min(numberOfResults, 50), 1);
     const url = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&part=snippet&maxResults=${numberOfResults}&q=${searchText}`;
     getJsonDataFromURL(url, (callback) => {
@@ -251,51 +241,3 @@ function getJsonDataFromURL(url, completion) {
 }
 
 
-
-class NetworkResponse {
-
-    constructor(status, info) {
-        this.status = status;
-        switch (status) {
-            case NetworkResponse.successStatus:
-                this.result = info;
-                break;
-            case NetworkResponse.failureStatus:
-                this.errorMessage = String(info);
-                break;
-        }
-    }
-
-    static success(result) {
-        return new NetworkResponse(this.successStatus, result);
-    }
-
-    static failure(errorMessage) {
-        return new NetworkResponse(this.failureStatus, errorMessage);
-    }
-
-    static get successStatus() { return "success"; }
-    static get failureStatus() { return "failure"; }
-
-
-    /// transformer will accept the old success value as a parameter and should return the new success value.
-    mapSuccess(transformer) {
-        if (typeof transformer !== "function") { return this; }
-        if (this.status === NetworkResponse.successStatus) {
-            return NetworkResponse.success(transformer(this.result));
-        } else {
-            return this;
-        }
-    }
-
-    // transformer will accept the old success value as a parameter and should return a completely new NetworkResponse object.
-    flatMapSuccess(transformer) {
-        if (typeof transformer !== "function") { return this; }
-        if (this.status === NetworkResponse.successStatus) {
-            return transformer(this.result);
-        } else {
-            return this;
-        }
-    }
-
-}
