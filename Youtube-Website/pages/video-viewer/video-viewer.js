@@ -231,22 +231,33 @@ function addLikeAndDislikeIconsToPage(){
 	}
 
 	function updateUIWithRecommendedVideos(videos) {
-		const recommendedVideoBoxesHTML = videos.map((video) => getRecommendedVideoBoxFor(video)).join("");
-		document.querySelector(".recommended-videos-section").innerHTML += recommendedVideoBoxesHTML;
-		document.querySelectorAll(".recommended-video-box .clamp").forEach((element) => Help.applyClampToElement(element));
+		const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
+		document.querySelector(".recommended-videos-section").append(...recommendedVideoBoxes);
 	}
 
 	function getRecommendedVideoBoxFor(video) {
-		return `<a href="${Help.getLinkToVideoViewerFile(video.id)}" class="recommended-video-box">
-			<div class="recommended-video-thumbnail">
-				<img src="${video.thumbnailURL}">
-			</div>
-			<div class="recommended-video-info-box">
-				<p class="recommended-video-title clamp" data-max-lines="2">${video.title}</p>
-				<p class="subtitle clamp" data-max-lines="1">${video.channelTitle}</p>
-				<p class="subtitle clamp" data-max-lines="1">${Help.getShortNumberStringFrom(video.numOfViews)} views</p>
-			</div>
-		</a>`;
+
+		let videoTitle, channelTitle, numOfViews;
+
+		const node = a({classString: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id), children: [
+			div({classString: "recommended-video-thumbnail", children: [
+				img(video.thumbnailURL)
+			]}),
+			div({classString: "recommended-video-info-box", children: [
+				videoTitle = p({classString: "recommended-video-title clamp", ["data-max-lines"]: "1", children: [text(video.title)]}),
+			 	channelTitle = p({classString: "subtitle clamp", ["data-max-lines"]: "1", children: [text(video.channelTitle)]}),
+				numOfViews = p({classString: "subtitle clamp", ["data-max-lines"]: "1", children: [
+					text(Help.getShortNumberStringFrom(video.numOfViews) + " views")
+				]})
+			]})
+		]});
+
+		[videoTitle, channelTitle, numOfViews].forEach(e => Help.applyClampToElement(e));
+
+		return node;
+
+
+
 	}
 
 
