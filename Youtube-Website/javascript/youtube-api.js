@@ -91,17 +91,23 @@ export class Channel {
 }
 
 
-export function getMostPopularYTVideos(numberOfVideos, completion) {
+export function getMostPopularYTVideos({numberOfVideos, pageToken, completion}) {
 
     numberOfVideos = Math.max(Math.min(numberOfVideos, 50), 1);
+    let url = `https://www.googleapis.com/youtube/v3/videos?key=${ytAPIKey}&part=snippet,statistics&chart=mostPopular&maxResults=${numberOfVideos}`;
 
-    const url = String.raw`https://www.googleapis.com/youtube/v3/videos?key=${ytAPIKey}&part=snippet,statistics&chart=mostPopular&maxResults=${numberOfVideos}`;
+    if (pageToken !== undefined){
+        url = url + "&pageToken=" + pageToken;
+    }
 
     getJsonDataFromURL(url, (callback) => {
         const response = callback.mapSuccess((json) => {
-            return json.items.map((item) => {
+            const nextPageToken = json.nextPageToken;
+            const previousPageToken = json.previousPageToken;
+            const videos = json.items.map((item) => {
                 return new Video(item);
             });
+            return new YoutubeAPIListReponse(videos, previousPageToken, nextPageToken);
         })
         completion(response);
     });

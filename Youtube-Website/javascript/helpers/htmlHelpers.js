@@ -16,7 +16,7 @@
     window[tag] = function ({ classString, children, config}) {
         const newEl = document.createElement(tag);
         if (classString !== undefined) {
-            newEl.className = classString
+            newEl.className = classString;
         }
         if (children !== undefined) {
             if (children[Symbol.iterator] !== undefined){

@@ -65,3 +65,16 @@ main{
 	font-size: 13px;
 }
 
+
+
+.recommended-videos-container .loading-indicator-box{
+	grid-column-start: 1;
+	grid-column-end: -1;
+	height: 200px;
+	display: grid;
+	align-content: center;
+	justify-content: center;
+}
+
+
+
