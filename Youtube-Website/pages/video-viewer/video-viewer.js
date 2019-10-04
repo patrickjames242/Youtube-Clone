@@ -4,7 +4,7 @@ import CommentBox from './CommentBox.js';
 import * as Help from '../../javascript/helpers.js';
 import * as YTHelpers from '../../javascript/youtube-api.js';
 import NetworkResponse from '../../javascript/helpers/NetworkResponse.js';
-import {SVGIcons} from '../../javascript/helpers/svg-icons.js';
+import { SVGIcons } from '../../javascript/helpers/svg-icons.js';
 
 
 
@@ -17,10 +17,12 @@ Help.executeWhenDocumentIsLoaded(() => {
 });
 
 
-function addLikeAndDislikeIconsToPage(){
+function addLikeAndDislikeIconsToPage() {
 	document.querySelector(".video-title-box .bottom-right-content-box .like-dislike-box .likes .icon").append(...Help.parseHTMLFrom(SVGIcons.likeButton()));
 	document.querySelector(".video-title-box .bottom-right-content-box .like-dislike-box .dislikes .icon").append(...Help.parseHTMLFrom(SVGIcons.dislikeButton()));
 }
+
+
 
 (() => {
 
@@ -73,7 +75,7 @@ function addLikeAndDislikeIconsToPage(){
 		setUpRecommendedVideosPositionCode();
 	})
 
-	
+
 	// called when the DOM is loaded
 	function setUpRecommendedVideosPositionCode() {
 		recommendedVideosSection = document.querySelector(".recommended-videos-section");
@@ -84,7 +86,7 @@ function addLikeAndDislikeIconsToPage(){
 		};
 	}
 
-	
+
 
 	function moveRecomendedVideosIfNeeded(currentWidth) {
 		if (currentWidth === previousWindowWidth) { return; }
@@ -99,7 +101,7 @@ function addLikeAndDislikeIconsToPage(){
 
 	}
 
-	
+
 
 	function moveRecommendedVideosTo(position) {
 		if (currentRecommendedVideosPosition() === position) { return; }
@@ -169,10 +171,17 @@ function addLikeAndDislikeIconsToPage(){
 
 (() => {
 
+	const reviewsLoadingIndicator = div({
+		classString: "loading-indicator-box", children: [
+			div({ classString: "loading-indicator" })
+		]
+	});
+	const recommendedVideosLoadingIndicator = reviewsLoadingIndicator.cloneNode();
+
 	Help.executeWhenDocumentIsLoaded(() => {
 		fetchAndDisplayYoutubeData();
 	});
-	
+
 
 	function fetchAndDisplayYoutubeData() {
 
@@ -189,11 +198,8 @@ function addLikeAndDislikeIconsToPage(){
 			});
 		});
 
-		YTHelpers.getCommentsForVideoWithVideoID(videoID, 30, (callback) => {
-			if (callback.status !== NetworkResponse.successStatus) { return; }
-			const comments = callback.result;
-			updateUIWithComments(comments);
-		});
+		fetchAndDisplayAdditionalCommentsForVideo();
+
 
 		YTHelpers.getRecommendedVideosForVideoWithVideoID(videoID, 25, (callback) => {
 			if (callback.status !== NetworkResponse.successStatus) { return; }
@@ -202,6 +208,37 @@ function addLikeAndDislikeIconsToPage(){
 		});
 
 	}
+
+	function fetchAndDisplayAdditionalCommentsForVideo(nextPageToken) {
+		const videoReviewsBox = document.querySelector(".video-reviews");
+		videoReviewsBox.append(reviewsLoadingIndicator);
+		YTHelpers.getCommentsForVideoWithVideoID({videoID: videoID, numberOfComments: 20, completion: (callback) => {
+			reviewsLoadingIndicator.remove();
+			if (callback.status !== NetworkResponse.successStatus) { return; }
+
+			const commentBoxes = callback.result.itemList.map((comment) => new CommentBox(comment));
+			const nextPageToken = callback.result.nextPageToken;
+
+			const nodes = commentBoxes.map((box) => box.node);
+			videoReviewsBox.append(...nodes);
+			const lastCommentBoxNode = nodes[nodes.length - 1];
+			setUpPaginationObserverForComment(lastCommentBoxNode, nextPageToken);
+		}});
+	}
+
+	function setUpPaginationObserverForComment(lastCommentBox, nextPageToken) {
+		let observer;
+		const observerCallback = (items) => {
+
+			if (items[0].isIntersecting) {
+				observer.disconnect();
+				fetchAndDisplayAdditionalCommentsForVideo(nextPageToken);
+			}
+		};
+		observer = new IntersectionObserver(observerCallback, { threshold: 0 });
+		observer.observe(lastCommentBox);
+	}
+
 
 	function updateUIWithVideoInfo(video) {
 		document.querySelector(".video-description-box .description-text").innerHTML = video.description;
@@ -213,6 +250,8 @@ function addLikeAndDislikeIconsToPage(){
 		document.querySelector(".video-description-box .channel-info .channel-name").innerHTML = video.channelTitle;
 		document.querySelector(".video-title-box .like-dislike-box .likes .num").innerHTML = Help.getShortNumberStringFrom(video.numOfLikes);
 		document.querySelector(".video-title-box .like-dislike-box .dislikes .num").innerHTML = Help.getShortNumberStringFrom(video.numOfDislikes);
+
+		collapseDescriptionIfNeeded();
 	}
 
 	function updateUIWithChannelInfo(channel) {
@@ -224,11 +263,7 @@ function addLikeAndDislikeIconsToPage(){
 		})();
 	}
 
-	function updateUIWithComments(comments) {
-		const commentBoxes = comments.map((comment) => new CommentBox(comment));
-		const nodes = commentBoxes.map((box) => box.node);
-		document.querySelector(".video-reviews").append(...nodes);
-	}
+	
 
 	function updateUIWithRecommendedVideos(videos) {
 		const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
@@ -239,29 +274,34 @@ function addLikeAndDislikeIconsToPage(){
 
 		let videoTitle, channelTitle, numOfViews;
 
-		const node = a({classString: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id), children: [
-			div({classString: "recommended-video-thumbnail", children: [
-				img(video.thumbnailURL)
-			]}),
-			div({classString: "recommended-video-info-box", children: [
-				videoTitle = p({classString: "recommended-video-title clamp", ["data-max-lines"]: "1", children: [text(video.title)]}),
-			 	channelTitle = p({classString: "subtitle clamp", ["data-max-lines"]: "1", children: [text(video.channelTitle)]}),
-				numOfViews = p({classString: "subtitle clamp", ["data-max-lines"]: "1", children: [
-					text(Help.getShortNumberStringFrom(video.numOfViews) + " views")
-				]})
-			]})
-		]});
+		const node = a({
+			classString: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id), children: [
+				div({
+					classString: "recommended-video-thumbnail", children: [
+						img(video.thumbnailURL)
+					]
+				}),
+				div({
+					classString: "recommended-video-info-box", children: [
+						videoTitle = p({ classString: "recommended-video-title clamp", ["data-max-lines"]: "2", children: [text(video.title)] }),
+						channelTitle = p({ classString: "subtitle clamp", ["data-max-lines"]: "1", children: [text(video.channelTitle)] }),
+						numOfViews = p({
+							classString: "subtitle clamp", ["data-max-lines"]: "1", children: [
+								text(Help.getShortNumberStringFrom(video.numOfViews) + " views")
+							]
+						})
+					]
+				})
+			]
+		});
 
 		[videoTitle, channelTitle, numOfViews].forEach(e => Help.applyClampToElement(e));
 
 		return node;
-
-
-
 	}
 
 
-	
+
 })();
 
 
@@ -279,7 +319,9 @@ function addLikeAndDislikeIconsToPage(){
 // DESCRIPTION TEXT EXPANDING AND COLLAPSING CODE
 
 
-window.toggleDescriptionTextCollapsedState = function() {
+
+
+window.toggleDescriptionTextCollapsedState = function () {
 
 	const showMoreButton = document.querySelector(".video-description-box .show-more-button");
 	const descriptionTextElement = document.querySelector(".video-description-box .description-text");
@@ -294,7 +336,12 @@ window.toggleDescriptionTextCollapsedState = function() {
 	showMoreButton.innerHTML = (descriptionTextElement.classList.contains(collapsedClass)) ? showMoreButtonText : showLessButtonText
 }
 
+function collapseDescriptionIfNeeded(){
+	const showMoreButton = document.querySelector(".video-description-box .show-more-button");
+	const descriptionTextElement = document.querySelector(".video-description-box .description-text");
 
-
-
-
+	if (descriptionTextElement.offsetHeight > 80){
+		toggleDescriptionTextCollapsedState();
+		showMoreButton.classList.remove("hidden");
+	}
+}  

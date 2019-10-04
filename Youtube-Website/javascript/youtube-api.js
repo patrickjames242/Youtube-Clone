@@ -154,17 +154,25 @@ export function getRecommendedVideosForVideoWithVideoID(videoId, numberOfVideos,
 
 
 
-export function getCommentsForVideoWithVideoID(videoID, numberOfComments, completion) {
+export function getCommentsForVideoWithVideoID({videoID, pageToken, numberOfComments, completion}) {
 
     numberOfComments = Math.max(Math.min(numberOfComments, 100), 1);
 
-    const url = String.raw`https://www.googleapis.com/youtube/v3/commentThreads?key=${ytAPIKey}&videoId=${videoID}&maxResults=${numberOfComments}&part=snippet,id&order=relevance`;
+    let url = String.raw`https://www.googleapis.com/youtube/v3/commentThreads?key=${ytAPIKey}&videoId=${videoID}&maxResults=${numberOfComments}&part=snippet,id&order=relevance`;
+    if (pageToken !== undefined){
+        url += "&pageToken=" + videoID;
+    }
+
+
     getJsonDataFromURL(url, (callback) => {
 
         const response = callback.mapSuccess((json) => {
-            return json.items.map((item) => {
+            const nextPageToken = json.nextPageToken;
+            const previousPageToken = json.previousPageToken;
+            const itemList = json.items.map((item) => {
                 return new VideoComment(item);
-            })
+            });
+            return new YoutubeAPIListReponse(itemList, previousPageToken, nextPageToken);
         })
         completion(response);
     });

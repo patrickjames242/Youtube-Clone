@@ -23,7 +23,7 @@ function fetchAndDisplayAdditionalYoutubeVideos(nextPageToken) {
 
     const recommendedVideosContainer = document.querySelector(".recommended-videos-container");
     recommendedVideosContainer.append(loadingIndicatorBox);
-   
+    
     YTHelpers.getMostPopularYTVideos({
         pageToken: nextPageToken,
         numberOfVideos: 50,
