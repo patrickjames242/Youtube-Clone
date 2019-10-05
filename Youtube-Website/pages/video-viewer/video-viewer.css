@@ -6,13 +6,13 @@ main{
 	
 }
 
-.sections-holder{
+.columns-holder{
 	display: flex;
 	align-items: flex-start;
 	margin: 20px;
 }
 
-.sections-holder-child{
+.columns-holder > *{
 	flex: 1;
 }
 
@@ -22,9 +22,11 @@ main{
 
 
 
+
+
 /* video section */
 
-.video-section{
+.video-column{
 	min-width: 450px;
 }
 
@@ -54,7 +56,7 @@ main{
 
 /* recommended videos section */
 
-.recommended-videos-section{
+.recommended-videos-column{
 	
 	display: grid;
 	grid-gap: 10px;
@@ -66,7 +68,7 @@ main{
 /* this class is added to the recommended-videos-section
 when it is displayed at the bottom of the video as opposed to the side */
 
-.recommended-videos-section-whenOnBottom{
+.recommended-videos-column-whenOnBottom{
 	margin-top: 20px;
 }
 

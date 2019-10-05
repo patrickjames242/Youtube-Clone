@@ -33,7 +33,7 @@ export default class RecommendedVideosBox{
 
     static _getNodes() {
         const nodes = {};
-        nodes.node = section({className: "recommended-videos-section recommended-videos-section-whenOnSide sections-holder-child"});
+        nodes.node = section({className: "recommended-videos-column recommended-videos-column-whenOnSide"});
         return nodes;
     }
 }
