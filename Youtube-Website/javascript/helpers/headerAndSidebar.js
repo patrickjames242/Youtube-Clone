@@ -31,9 +31,9 @@ function getNewHeader(){
 							input({className: "search-placeholder subtitle", type: "search", placeholder: "Search", size: "1", name: "searchText"})
 						]),
 						div({className: "search-button-box"}, [
-							div({className: "search-icon", children:[
+							div({className: "search-icon"}, [
 								...parseHTMLFrom(SVGIcons.searchIcon())
-							]})
+							])
 						])
 					])
 				])
