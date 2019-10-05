@@ -13,6 +13,7 @@ export class YoutubeAPIListReponse{
     }
 }
 
+
 export class Video {
 
     /// requires that the json have BOTH the snippet and statistics parts
@@ -40,6 +41,7 @@ export class Video {
         // console.log(this);
     }
 }
+
 
 export class VideoComment {
     constructor(ytCommentItem) {

@@ -33,7 +33,7 @@ function getNewSearchResultsCell(video){
     const node = 
     a({className: "cell", href: Help.getLinkToVideoViewerFile(video.id)}, [
         div({className: "thumbnail-holder"}, [
-            img(video.thumbnailURL)
+            img({src: video.thumbnailURL})
         ]),
         div({className: "info-box"}, [
             title = p({className: "title clamp", ["data-max-lines"]: "2"}, [

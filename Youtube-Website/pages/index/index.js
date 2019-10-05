@@ -67,7 +67,7 @@ function getRecommendedVideoBoxNode(video) {
     const node =
     a({className: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id)}, [
         div({className: "thumbnail-box"}, [
-            img(video.thumbnailURL)
+            img({src: video.thumbnailURL})
         ]),
         div({className: "video-details"}, [
             videoTitle = p({className: "video-title clamp", ["data-max-lines"]: "2"}, [

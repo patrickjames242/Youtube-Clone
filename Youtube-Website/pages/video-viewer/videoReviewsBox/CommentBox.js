@@ -1,9 +1,9 @@
 
 
-import { SVGIcons } from '../../javascript/helpers/svg-icons.js';
-import * as Help from "../../javascript/helpers.js";
-import * as YTHelpers from "../../javascript/youtube-api.js";
-import NetworkResponse from "../../javascript/helpers/NetworkResponse.js";
+import { SVGIcons } from '/javascript/helpers/svg-icons.js';
+import * as Help from "/javascript/helpers.js";
+import * as YTHelpers from "/javascript/youtube-api.js";
+import NetworkResponse from "/javascript/helpers/NetworkResponse.js";
 
 
 export default class CommentBox {
@@ -130,7 +130,7 @@ function getCommentBoxNodeProperties(comment){
 	const objectToReturn = {};
 	objectToReturn.node = div({className: "user-comment-box"}, [
 		div({className: "profile-image"}, [
-			img(comment.authorProfileImageURL)
+			img({src: comment.authorProfileImageURL})
 		]),
 		div({className: "right-content"}, [
 			p({className: "top-text"}, [
