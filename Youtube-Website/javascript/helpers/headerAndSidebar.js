@@ -12,89 +12,87 @@ export function addHeaderAndSideBarToDocument(){
 	document.body.prepend(getNewHeader(), getNewSideBarNode());
 }
 
-
-
 function getNewHeader(){
-	return header({children: [
-		div({classString: "header-content", children: [
-			div({classString: "left-content", children: [
-				div({classString: "menu-icon header-icon unsupported-feature-button", children: [
+	return header({}, [
+		div({className: "header-content"}, [
+			div({className: "left-content"}, [
+				div({className: "menu-icon header-icon unsupported-feature-button"}, [
 					...parseHTMLFrom(SVGIcons.menuButton())
-				]}),
-				a({classString: "youtube-logo", href: "/index.html", children: [
+				]),
+				a({className: "youtube-logo", href: "/index.html"}, [
 					...parseHTMLFrom(SVGIcons.youtubeLogo())
-				]})
-			]}),
+				])
+			]),
 
-			div({classString: "center-content", children: [
-				div({classString: "search-box-container", children: [
-					div({classString: "search-box", children: [
-						form({action: "/pages/search-results/search-results.html", children: [
-							input({classString: "search-placeholder subtitle", type: "search", placeholder: "Search", size: "1", name: "searchText"})
-						]}),
-						div({classString: "search-button-box", children: [
-							div({classString: "search-icon", children:[
+			div({className: "center-content"}, [
+				div({className: "search-box-container"}, [
+					div({className: "search-box"}, [
+						form({action: "/pages/search-results/search-results.html"}, [
+							input({className: "search-placeholder subtitle", type: "search", placeholder: "Search", size: "1", name: "searchText"})
+						]),
+						div({className: "search-button-box"}, [
+							div({className: "search-icon", children:[
 								...parseHTMLFrom(SVGIcons.searchIcon())
 							]})
-						]})
-					]})
-				]})
-			]}),
+						])
+					])
+				])
+			]),
 
-			div({classString: "right-content", children: [
-				div({classString: "search-icon header-icon unsupported-feature-button", children: [
+			div({className: "right-content"}, [
+				div({className: "search-icon header-icon unsupported-feature-button"}, [
 					...parseHTMLFrom(SVGIcons.searchIcon())
-				]}),
-				div({classString: "apps-icon header-icon unsupported-feature-button", children: [
+				]),
+				div({className: "apps-icon header-icon unsupported-feature-button"}, [
 					...parseHTMLFrom(SVGIcons.youtubeAppsIcon())
-				]}),
-				div({classString: "notifications-icon header-icon unsupported-feature-button", children: [
+				]),
+				div({className: "notifications-icon header-icon unsupported-feature-button"}, [
 					...parseHTMLFrom(SVGIcons.notificationsAppIcon())
-				]}),
+				]),
 				getNewSignInButton(),
-			]})
-		]})
-	]});
+			])
+		])
+	]);
 }
 
 
 
 
 function getNewSideBarNode(){
-	return div({classString: "side-bar", children: [
-		div({classString: "wide-content", children: [
-			div({classString: "cell-segment underlined", children: [
+	return div({className: "side-bar"}, [
+		div({className: "wide-content"}, [
+			div({className: "cell-segment underlined"}, [
 				...([
 					"Home",
 					"Trending",
 					"Subscriptions"
 				].map((x) => getNewWideIconCell(x)))
-			]}),
+			]),
 
-			div({classString: "cell-segment underlined", children: [
+			div({className: "cell-segment underlined"}, [
 				...([
 					"Library", 
 					"History"
 				].map((x) => getNewWideIconCell(x)))
-			]}),
+			]),
 
-			div({classString: "sign-in-segment cell-segment underlined padded-cell", children: [
-				p({classString: "text", children: [
+			div({className: "sign-in-segment cell-segment underlined padded-cell"}, [
+				p({className: "text"}, [
 					text("Sign in to like videos, comment, and subscribe.")
-				]}),
-				p({classString: "sign-in-button unsupported-feature-button", children: [
-					div({classString: "icon", children: [
+				]),
+				p({className: "sign-in-button unsupported-feature-button"}, [
+					div({className: "icon"}, [
 						...parseHTMLFrom(SVGIcons.signInButtonIcon())
-					]}),
-					p({classString: "text", children: [
+					]),
+					p({className: "text"}, [
 						text("sign in")
-					]})
-				]})
-			]}),
+					])
+				])
+			]),
 
-			div({classString: "footer-cell-segment cell-segment padded-cell", children: [
+			div({className: "footer-cell-segment cell-segment padded-cell"}, [
 
-				div({classString: "links links1", children: [
+				div({className: "links links1"}, [
 					...([
 						"About",
 						"Press",
@@ -104,39 +102,39 @@ function getNewSideBarNode(){
 						"Advertise",
 						"Developers"
 					].map((x) => {
-						return span({classString: "link", children: [
+						return span({className: "link"}, [
 							text(x)
-						]})
+						])
 					}))
-				]}),
+				]),
 
-				div({classString: "links links2", children: [
+				div({className: "links links2"}, [
 					...([
 						"Terms",
 						"Privacy",
 						"Policy & Safety",
 						"Test new features"
 					].map((x) => {
-						return span({classString: "link", children: [
+						return span({className: "link"}, [
 							text(x)
-						]})
+						])
 					}))
-				]}), 
+				]), 
 
-				div({classString: "copyright-info subtitle", children: [
+				div({className: "copyright-info subtitle"}, [
 					...parseHTMLFrom("&#169; 2019 YouTube, LLC")
-				]})
-			]})
-		]}), 
-		div({classString: "narrow-content", children: [
+				])
+			])
+		]), 
+		div({className: "narrow-content"}, [
 			...([
 				"Home",
 				"Trending",
 				"Subscriptions",
 				"Library",	
 			].map((x) => getNewNarrowIconCell(x)))
-		]})
-	]})
+		])
+	])
 }
 
 
@@ -144,26 +142,26 @@ function getNewSideBarNode(){
 
 function getNewNarrowIconCell(labelTitle){
 	const iconMethodName = String(labelTitle).toLowerCase() + "Icon"
-	return div({classString: "cell", children: [
-		div({classString: "icon", children: [
+	return div({className: "cell"}, [
+		div({className: "icon"}, [
 			...parseHTMLFrom(SVGIcons[iconMethodName]())
-		]}),
-		p({classString: "label", children: [
+		]),
+		p({className: "label"}, [
 			text(labelTitle)
-		]})
-	]});
+		])
+	]);
 }
 
 function getNewWideIconCell(labelTitle){
 	const iconMethodName = String(labelTitle).toLowerCase() + "Icon";
-	return div({classString: "cell padded-cell", children: [
-		div({classString: "icon", children: [
+	return div({className: "cell padded-cell"}, [
+		div({className: "icon"}, [
 			...parseHTMLFrom(SVGIcons[iconMethodName]())
-		]}),
-		p({classString: "label", children: [
+		]),
+		p({className: "label"}, [
 			text(labelTitle)
-		]})
-	]});
+		])
+	]);
 }
 
 
@@ -174,14 +172,14 @@ function getNewWideIconCell(labelTitle){
 
 
 function getNewSignInButton(){
-	return div({classString: "sign-in-button unsupported-feature-button", children: [
-		div({classString: "icon", children: [
+	return div({className: "sign-in-button unsupported-feature-button"}, [
+		div({className: "icon"}, [
 			...parseHTMLFrom(SVGIcons.signInButtonIcon())
-		]}),
-		p({classString: "text", children: [
+		]),
+		p({className: "text"}, [
 			text("sign in")
-		]})
-	]});
+		])
+	]);
 }
 
 

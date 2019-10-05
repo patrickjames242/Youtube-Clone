@@ -128,52 +128,52 @@ export default class CommentBox {
 // returns an object containing all the nodes as properties, that must be set on each comment box
 function getCommentBoxNodeProperties(comment){
 	const objectToReturn = {};
-	objectToReturn.node = div({classString: "user-comment-box", children: [
-		div({classString: "profile-image", children: [
+	objectToReturn.node = div({className: "user-comment-box"}, [
+		div({className: "profile-image"}, [
 			img(comment.authorProfileImageURL)
-		]}),
-		div({classString: "right-content", children: [
-			p({classString: "top-text", children: [
-				span({classString: "name", children: [
+		]),
+		div({className: "right-content"}, [
+			p({className: "top-text"}, [
+				span({className: "name"}, [
 					text(comment.authorName)
-				]}),
-				span({classString: "time subtitle", children: [
+				]),
+				span({className: "time subtitle"}, [
 					text(Help.getTimeSinceDateStringFrom(comment.publishedAtDate))
-				]})
-			]}),
+				])
+			]),
 
-			objectToReturn.reviewTextBox = p({classString: "review-text", children: [
+			objectToReturn.reviewTextBox = p({className: "review-text"}, [
 				...Help.parseHTMLFrom(comment.text)
-			]}),
+			]),
 
-			objectToReturn.readMoreButton = p({classString: "read-more-button button"}),
+			objectToReturn.readMoreButton = p({className: "read-more-button button"}),
 
-			div({classString: "like-dislike-buttons", children: [
-				div({classString: "like-button like-dislike-button unsupported-feature-button", children: [
+			div({className: "like-dislike-buttons"}, [
+				div({className: "like-button like-dislike-button unsupported-feature-button"}, [
 					...Help.parseHTMLFrom(SVGIcons.likeButton())
-				]}),
-				div({classString: "num-of-likes", children: [
+				]),
+				div({className: "num-of-likes"}, [
 					text(Help.getShortNumberStringFrom(comment.numOfLikes))
-				]}),
-				div({classString: "dislike-button like-dislike-button unsupported-feature-button", children: [
+				]),
+				div({className: "dislike-button like-dislike-button unsupported-feature-button"}, [
 					...Help.parseHTMLFrom(SVGIcons.dislikeButton())
-				]}),
-				p({classString: "reply-button uppercase-text-button unsupported-feature-button", children: [
+				]),
+				p({className: "reply-button uppercase-text-button unsupported-feature-button"}, [
 					text("reply")
-				]})
-			]}),
+				])
+			]),
 
-			objectToReturn.viewRepliesButton = div({classString: "view-replies-button button"}),
+			objectToReturn.viewRepliesButton = div({className: "view-replies-button button"}),
 
-			objectToReturn.repliesBox = div({classString: "replies-box", children: [
+			objectToReturn.repliesBox = div({className: "replies-box"}, [
 
-				objectToReturn.loadingIndicatorBox = div({classString: "replies-loading-indicator-box", children: [
-					div({classString: "loading-indicator"})
-				]}),
+				objectToReturn.loadingIndicatorBox = div({className: "replies-loading-indicator-box"}, [
+					div({className: "loading-indicator"})
+				]),
 
-				objectToReturn.repliesHolder = div({classString: "replies-holder"})
-			]})
-		]})
-	]});
+				objectToReturn.repliesHolder = div({className: "replies-holder"})
+			])
+		])
+	]);
 	return objectToReturn;
 }

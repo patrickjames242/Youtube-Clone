@@ -172,10 +172,10 @@ function addLikeAndDislikeIconsToPage() {
 (() => {
 
 	const reviewsLoadingIndicator = div({
-		classString: "loading-indicator-box", children: [
-			div({ classString: "loading-indicator" })
+		className: "loading-indicator-box"}, [
+			div({ className: "loading-indicator" })
 		]
-	});
+	);
 	const recommendedVideosLoadingIndicator = reviewsLoadingIndicator.cloneNode();
 
 	Help.executeWhenDocumentIsLoaded(() => {
@@ -275,25 +275,25 @@ function addLikeAndDislikeIconsToPage() {
 		let videoTitle, channelTitle, numOfViews;
 
 		const node = a({
-			classString: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id), children: [
+			className: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id)}, [
 				div({
-					classString: "recommended-video-thumbnail", children: [
+					className: "recommended-video-thumbnail"}, [
 						img(video.thumbnailURL)
 					]
-				}),
+				),
 				div({
-					classString: "recommended-video-info-box", children: [
-						videoTitle = p({ classString: "recommended-video-title clamp", ["data-max-lines"]: "2", children: [text(video.title)] }),
-						channelTitle = p({ classString: "subtitle clamp", ["data-max-lines"]: "1", children: [text(video.channelTitle)] }),
+					className: "recommended-video-info-box"}, [
+						videoTitle = p({ className: "recommended-video-title clamp", ["data-max-lines"]: "2"}, [text(video.title)] ),
+						channelTitle = p({ className: "subtitle clamp", ["data-max-lines"]: "1"}, [text(video.channelTitle)] ),
 						numOfViews = p({
-							classString: "subtitle clamp", ["data-max-lines"]: "1", children: [
+							className: "subtitle clamp", ["data-max-lines"]: "1"}, [
 								text(Help.getShortNumberStringFrom(video.numOfViews) + " views")
 							]
-						})
+						)
 					]
-				})
+				)
 			]
-		});
+		);
 
 		[videoTitle, channelTitle, numOfViews].forEach(e => Help.applyClampToElement(e));
 

@@ -5,10 +5,10 @@ import NetworkResponse from "../../javascript/helpers/NetworkResponse.js";
 
 
 const loadingIndicatorBox = div({
-    classString: "loading-indicator-box", children: [
-        div({ classString: "loading-indicator" })
+    className: "loading-indicator-box"}, [
+        div({ className: "loading-indicator" })
     ]
-})
+);
 
 
 
@@ -65,24 +65,24 @@ function setUpPaginationObserver(lastVideoBox, nextPageToken) {
 function getRecommendedVideoBoxNode(video) {
     let videoTitle, channelName;
     const node =
-    a({classString: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id), children: [
-        div({classString: "thumbnail-box", children: [
+    a({className: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id)}, [
+        div({className: "thumbnail-box"}, [
             img(video.thumbnailURL)
-        ]}),
-        div({classString: "video-details", children: [
-            videoTitle = p({classString: "video-title clamp", ["data-max-lines"]: "2", children: [
+        ]),
+        div({className: "video-details"}, [
+            videoTitle = p({className: "video-title clamp", ["data-max-lines"]: "2"}, [
                 text(video.title)
-            ]}),
-            div({classString: "subtitles", children: [
-                channelName = p({classString: "channel-name subtitle clamp", ["data-max-lines"]: "1", children: [
+            ]),
+            div({className: "subtitles"}, [
+                channelName = p({className: "channel-name subtitle clamp", ["data-max-lines"]: "1"}, [
                     text(video.channelTitle)
-                ]}),
-                p({classString: "views-date subtitle", children: [
+                ]),
+                p({className: "views-date subtitle"}, [
                     text(`${Help.getShortNumberStringFrom(video.numOfViews)} views · ${Help.getTimeSinceDateStringFrom(video.publishedAtDate)}`)
-                ]})
-            ]})
-        ]})
-    ]});
+                ])
+            ])
+        ])
+    ]);
 
     [videoTitle, channelName].forEach((x) => Help.applyClampToElement(x))
 

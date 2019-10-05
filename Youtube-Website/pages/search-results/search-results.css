@@ -70,9 +70,7 @@ main{
 
 .search-results-holder > .cell .video-description{
     margin-top: 10px;
-    
     overflow-wrap: break-word;
-    
     hyphens: auto;
 }
 
@@ -84,4 +82,3 @@ main{
 
 
 
-/* 1276 */

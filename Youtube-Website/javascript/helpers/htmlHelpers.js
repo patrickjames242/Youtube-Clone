@@ -13,10 +13,10 @@
 ].forEach((tag) => {
 
 	// att stands for attributes. within the att object place all the attributes and attribute values you wish to set on the element
-    window[tag] = function ({ classString, children, config}) {
+    window[tag] = function ({className}, children) {
         const newEl = document.createElement(tag);
-        if (classString !== undefined) {
-            newEl.className = classString;
+        if (className !== undefined) {
+            newEl.className = className;
         }
         if (children !== undefined) {
             if (children[Symbol.iterator] !== undefined){
@@ -26,16 +26,11 @@
             }
 		}
 		const attributeKeys = Object.keys(arguments[0]).filter((att) => {
-			return att !== "classString" && att !== "children" && att !== "config";
+			return att !== "className";
 		});
 		for (const key of attributeKeys){
 			newEl.setAttribute(key, arguments[0][key]);
 		}
-		
-		if (config !== undefined){
-			config(newEl);
-		}
-		
 		return newEl;
 	}
 	

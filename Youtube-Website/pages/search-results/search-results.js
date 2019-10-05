@@ -31,25 +31,28 @@ function fetchAndDisplayYoutubeData(){
 function getNewSearchResultsCell(video){
     let title, videoDetails, videoDescription;
     const node = 
-    a({classString: "cell", href: Help.getLinkToVideoViewerFile(video.id), children: [
-        div({classString: "thumbnail-holder", children: [
+    a({className: "cell", href: Help.getLinkToVideoViewerFile(video.id)}, [
+        div({className: "thumbnail-holder"}, [
             img(video.thumbnailURL)
-        ]}),
-        div({classString: "info-box", children: [
-            title = p({classString: "title clamp", ["data-max-lines"]: "2", children: [
+        ]),
+        div({className: "info-box"}, [
+            title = p({className: "title clamp", ["data-max-lines"]: "2"}, [
                 text(video.title)
-            ]}),
-            videoDetails = p({classString: "video-details clamp", ["data-max-lines"]: "1", children: [
+            ]),
+            videoDetails = p({className: "video-details clamp", ["data-max-lines"]: "1"}, [
                 text(`${video.channelTitle} • ${Help.getShortNumberStringFrom(video.numOfViews) + " views"} • ${Help.getTimeSinceDateStringFrom(video.publishedAtDate)}`)
-            ]}),
-            // p({classString: "video-description clamp", ["data-max-lines"]: "2", children: [
+            ]),
+            // p({className: "video-description clamp", ["data-max-lines"]: "2"}, [
             //     text(video.description)
             // ]}),
-            videoDescription = p({classString: "video-description clamp", ["data-max-lines"]: "2", children: [
+            videoDescription = p({className: "video-description clamp", ["data-max-lines"]: "2"}, [
                 text("Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo ex consectetur sunt maiores a vel ea beatae provident dolore delectus natus ipsam quibusdam porro perferendis eligendi nam esse, corporis velit fugit reprehenderit fuga! Temporibus consequuntur quisquam accusantium fugit reprehenderit rerum voluptate suscipit id nemo ducimus exercitationem quo fugiat, eaque in?")
-            ]})
-        ]})
-    ]});
+
+
+                // text("alskdjfalksdjflkasjdflkajsdlkfjasldkfjlaksdjflkasdjlfkajsdlkfjslkdjflskdjflksdjflksdjflksdjflkjsdlkfjsdlkfjsdlkfjsldkjflksdjflksdjlfkjsdlkfjsdlkfjsdlkfjsdlkjflksdjflksdjflksjdlkfjsdklfjsdklfjksdjfklsdjfksjdkfjsdklfjsdkljflksdjfklsdjlfjsdljfs")
+            ])
+        ])
+    ]);
 
     [title, videoDetails, videoDescription].forEach((e) => Help.applyClampToElement(e));
     return node;
