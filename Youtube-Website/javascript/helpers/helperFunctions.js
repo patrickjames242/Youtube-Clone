@@ -1,6 +1,7 @@
+
 import { documentDidLoadNotification } from "./notifications.js";
 
-export function addStyleSheetToDocument(url){
+export function addStyleSheetToDocument(url) {
 	const link = document.createElement("link");
 	link.setAttribute("rel", "stylesheet");
 	link.setAttribute("type", "text/css");
@@ -8,17 +9,17 @@ export function addStyleSheetToDocument(url){
 	document.head.append(link);
 }
 
-export function getLinkToVideoViewerFile(videoID){
+export function getLinkToVideoViewerFile(videoID) {
 	return `/pages/video-viewer/video-viewer.html?videoID=${videoID}`;
 }
 
 
 // returns null if no elements where found in the string, otherwise returns a node list 
-export function parseHTMLFrom(string){
+export function parseHTMLFrom(string) {
 	const domParser = new DOMParser();
 	const html = domParser.parseFromString(string, "text/html");
 	const result = html.body.childNodes;
-	if (result.length >= 1){
+	if (result.length >= 1) {
 		return result;
 	} else {
 		throw "invalid html";
@@ -97,10 +98,25 @@ export function getTimeSinceDateStringFrom(date) {
 		if (val < unit.threshold || unit.text === lastUnit.text) {
 			return String(val) + " " + unit.text + ((val === 1) ? "" : "s") + " ago";
 		}
-		
+
 	}
 
 	throw new Error("Should return before it breaks out of the forloop. Check the logic.");
+}
+
+
+// the callback is executed when any pixel of the element appears on screen after not being visible. The callback is ONLY EXECUTED ONCE, then never again.
+export function setUpPaginationObserverOn(element, callback) {
+	let observer;
+	const observerCallback = (items) => {
+		if (items[0].isIntersecting) {
+			observer.disconnect();
+			callback();
+		}
+	};
+	observer = new IntersectionObserver(observerCallback, { threshold: 0 });
+	observer.observe(element);
+	return observer;
 }
 
 

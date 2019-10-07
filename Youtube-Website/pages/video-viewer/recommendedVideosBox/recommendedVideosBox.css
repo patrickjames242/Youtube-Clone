@@ -12,20 +12,13 @@
 	width: 360px;
 }
 
-.all-recommended-videos-box .show-more-videos-button{
-	--highlight-color: #065fd4; 
-	height: 35px;
-	border-radius: 3px;
-	border: 1px solid var(--highlight-color);
+
+.all-recommended-videos-box > .videos-holder{
 	display: grid;
-	align-content: center;
-	justify-content: center;
-	color: var(--highlight-color);
-	text-transform: uppercase;
-	font-weight: 500;
-	font-size: 13px;
-	cursor: pointer;
+	grid-gap: 10px;
 }
+
+
 
 
 .recommended-video-box{
@@ -60,5 +53,43 @@
 	margin-bottom: 5px;
 }
 
-/*----------------------------*/
+
+
+
+.all-recommended-videos-box > .bottom-content-holder > .show-more-videos-button{
+	--highlight-color: #065fd4; 
+	height: 35px;
+	border-radius: 3px;
+	border: 1px solid var(--highlight-color);
+	display: grid;
+	align-content: center;
+	justify-content: center;
+	color: var(--highlight-color);
+	text-transform: uppercase;
+	font-weight: 500;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.all-recommended-videos-box > .bottom-content-holder > .show-more-videos-button.hidden{
+	display: none;
+}
+
+.all-recommended-videos-box > .bottom-content-holder > .loading-indicator-box{
+	display: grid;
+	align-content: center;
+	justify-content: center;
+}
+
+.all-recommended-videos-box > .bottom-content-holder > .loading-indicator-box.hidden{
+	display: none;
+}
+
+
+
+.all-recommended-videos-box > .bottom-content-holder > .loading-indicator-box > .loading-indicator{
+	--size: 40px;
+}
+
+
 

@@ -1,7 +1,6 @@
 
 .video-description-box{
-	padding: 20px 0;
-	
+	padding-bottom: 20px;
 }
 
 .video-description-box > .channel-info{
@@ -29,7 +28,6 @@
 	height: 100%;
 	object-fit: fill;
 }
-
 
 
 .video-description-box > .channel-info > .text-box{

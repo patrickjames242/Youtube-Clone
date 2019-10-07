@@ -6,38 +6,150 @@ import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
 
 Help.addStyleSheetToDocument('/pages/video-viewer/recommendedVideosBox/recommendedVideosBox.css');
 
+
+const RecVideosBoxPosition = {
+    ON_SIDE: Symbol('on_side'),
+    ON_BOTTOM: Symbol('on_bottom')
+}
+
 export default class RecommendedVideosBox{
 
     constructor(videoID){
         this.videoID = videoID;
         Object.assign(this, RecommendedVideosBox._getNodes());
+        this._attatchShowMoreVideosButtonClickListener();
     }
-
-    showMoreVideosButton = div({className: "show-more-videos-button"}, [text("show more")]);
-
 
     startFetchingVideos(){
-        YTHelpers.getRecommendedVideosForVideoWithVideoID(this.videoID, 25, (callback) => {
-			if (callback.status !== NetworkResponse.successStatus) { return; }
-            const videos = callback.result;
-            const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
-            this.node.append(...recommendedVideoBoxes, this.showMoreVideosButton);
-		});
+        this._fetchAdditionalVideosFromYoutube();
     }
 
-    onSideClass = "on-side";
+    _onSideClass = "on-side";
 
     notifyThatBoxWasPlacedOnTheSide(){
-        this.node.classList.add(this.onSideClass);
+        this._attachPaginationObserverToLastRecommendedVideoBox();
+        this.node.classList.add(this._onSideClass); 
+        this._updateShowMoreButtonVisibility();
     }
 
     notifyThatBoxWasPlacedOnBottomOfDescriptionBox(){
-        this.node.classList.remove(this.onSideClass);
+        if (this._currentPaginationObserver !== undefined){
+            this._currentPaginationObserver.disconnect();
+        }
+        this.node.classList.remove(this._onSideClass);
+        this._updateShowMoreButtonVisibility();
     }
+
+    get _currentPosition(){
+        return this.node.classList.contains(this._onSideClass) ? RecVideosBoxPosition.ON_SIDE : RecVideosBoxPosition.ON_BOTTOM;
+    }
+
+    get _shouldShowMoreVideosButtonBeShown(){
+        return this._currentPosition === RecVideosBoxPosition.ON_BOTTOM && 
+        this._videosAreCurrentlyBeingFetched === false &&
+        this._currentNextPageToken !== undefined;
+    }
+
+    _updateShowMoreButtonVisibility(){
+        this.showMoreVideosButton.isHidden = this._shouldShowMoreVideosButtonBeShown === false;
+    }
+
+    
+
+    
+
+    _currentPaginationObserver;
+
+    _currentNextPageToken;
+
+    _currentLastRecommendedVideoBox;
+
+    _videosAreCurrentlyBeingFetched = false;
+
+    
+    
+    _fetchAdditionalVideosFromYoutube(nextPageToken){
+        
+        this.loadingIndicatorBox.isHidden = false;
+     
+        this._videosAreCurrentlyBeingFetched = true;
+        this._updateShowMoreButtonVisibility();
+        
+        YTHelpers.getRecommendedVideosForVideoWithVideoID({videoId: this.videoID, numberOfVideos: 15, pageToken: nextPageToken, completion: (callback) => {
+            this._videosAreCurrentlyBeingFetched = false;
+            this.loadingIndicatorBox.isHidden = true;
+            this._updateShowMoreButtonVisibility();
+			if (callback.status !== NetworkResponse.successStatus) { return; }
+            
+            const videos = this._filterThroughNewlyFetchedVideos(callback.result.itemList);
+
+            const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
+            this.videosHolder.append(...recommendedVideoBoxes);
+            
+            this._currentLastRecommendedVideoBox = recommendedVideoBoxes[recommendedVideoBoxes.length - 1];
+            this._currentNextPageToken = callback.result.nextPageToken;
+
+            this._updateShowMoreButtonVisibility();
+
+            if (this._currentPosition === RecVideosBoxPosition.ON_SIDE){
+                this._attachPaginationObserverToLastRecommendedVideoBox();
+            }
+		}});
+    }
+
+    _previouslyFetchedVideos = [];
+
+    // because sometimes the yotuube api sends videos in one page that were already sent in the previous ones.
+    _filterThroughNewlyFetchedVideos(videos){
+        const filteredVideos = videos.filter(x => {
+            for (const y of this._previouslyFetchedVideos){
+                if (y.id === x.id){return false};
+            }
+            return true;
+        });
+        this._previouslyFetchedVideos.push(...filteredVideos);
+        return filteredVideos;
+    }
+
+    _attachPaginationObserverToLastRecommendedVideoBox(){
+        const lastVideoBox = this._currentLastRecommendedVideoBox;
+        const nextPageToken = this._currentNextPageToken;
+        if (lastVideoBox !== undefined && 
+            nextPageToken !== undefined){
+            this._currentPaginationObserver = Help.setUpPaginationObserverOn(lastVideoBox, () => {
+                this._fetchAdditionalVideosFromYoutube(nextPageToken);
+            });
+        }
+    }
+
+    
+
+    _attatchShowMoreVideosButtonClickListener(){
+        this.showMoreVideosButton.addEventListener('click', () => {
+            this._respondToShowMoreVideosButtonClicked();
+        });
+    }
+
+    _respondToShowMoreVideosButtonClicked(){
+        this._fetchAdditionalVideosFromYoutube(this._currentNextPageToken);
+    }
+
 
     static _getNodes() {
         const nodes = {};
-        nodes.node = div({className: "all-recommended-videos-box"});
+        nodes.node = div({className: "all-recommended-videos-box"}, [
+            nodes.videosHolder = div({className: "videos-holder"}),
+            nodes.bottomContentHolder = div({className: "bottom-content-holder"}, [
+                nodes.loadingIndicatorBox = div({className: "loading-indicator-box"}, [
+                    div({className: "loading-indicator"})
+                ]),
+                nodes.showMoreVideosButton = div({className: "show-more-videos-button"}, [
+                    text("show more")
+                ])
+            ])
+        ]);
+        nodes.loadingIndicatorBox.isHidden = true;
+        nodes.showMoreVideosButton.isHidden = true;
         return nodes;
     }
 }
@@ -47,7 +159,6 @@ export default class RecommendedVideosBox{
 function getRecommendedVideoBoxFor(video) {
 
     let videoTitle, channelTitle, numOfViews;
-
 
     const node = a({ className: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id) }, [
         div({ className: "recommended-video-thumbnail" }, [

@@ -43,37 +43,23 @@ export default class VideoCommentsBox{
 				const nodes = commentBoxes.map((box) => box.node);
 				this.node.append(...nodes);
                 const lastCommentBoxNode = nodes[nodes.length - 1];
-                this._setUpPaginationObserverForCommentBox(lastCommentBoxNode, nextPageToken);
+        
+                Help.setUpPaginationObserverOn(lastCommentBoxNode, () => {
+                    this._fetchAndDisplayAdditionalComments(nextPageToken);
+                });
 			}
 		});
     }
-
-    _setUpPaginationObserverForCommentBox(commentBox, nextPageToken){
-        let observer;
-		const observerCallback = (items) => {
-
-			if (items[0].isIntersecting) {
-				observer.disconnect();
-                this._fetchAndDisplayAdditionalComments(nextPageToken);
-			}
-		};
-		observer = new IntersectionObserver(observerCallback, { threshold: 0 });
-		observer.observe(commentBox);
-    }
-
 
 
 
     static _getNodes(){
         const nodes = {};
 
-        
-
         nodes.node = div({className: "all-video-comments-box"}, [
-        
             nodes.numberOfCommentsBox = p({className: "num-of-comments"}),
             div({className: "add-comment-box"}, [
-                img({className: "profile-image",src: "/images/blank_user.png"}),
+                img({className: "profile-image", src: "/images/blank_user.png"}),
                 p({className: "add-comment-text subtitle underlined unsupported-feature-button"}, [
                     text("Add a public comment")
                 ])
@@ -81,7 +67,6 @@ export default class VideoCommentsBox{
         ]); 
         return nodes;
     }
-
 
 }
 

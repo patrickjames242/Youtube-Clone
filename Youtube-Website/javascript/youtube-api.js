@@ -1,9 +1,9 @@
 
 import NetworkResponse from "./helpers/NetworkResponse.js"; 
 
-// const ytAPIKey = "AIzaSyDvO-B0N8F6yG_Yh2_7PiEpp1r9dTHiiaE";
+const ytAPIKey = "AIzaSyDvO-B0N8F6yG_Yh2_7PiEpp1r9dTHiiaE";
 
-const ytAPIKey = "AIzaSyDXn6ZJ1Zi01Zlp8irQY0g_Z-WBgR7UDdc";
+// const ytAPIKey = "AIzaSyDXn6ZJ1Zi01Zlp8irQY0g_Z-WBgR7UDdc";
 
 export class YoutubeAPIListReponse{
     constructor(itemList, previousPageToken, nextPageToken){
@@ -134,22 +134,35 @@ export function getVideoObjectForVideoID(videoID, completion) {
 
 
 
-export function getRecommendedVideosForVideoWithVideoID(videoId, numberOfVideos, completion) {
+export function getRecommendedVideosForVideoWithVideoID({videoId, numberOfVideos, pageToken, completion}) {
 
     numberOfVideos = Math.max(Math.min(numberOfVideos, 50), 1);
 
-    const recommendedVideosURL = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&relatedToVideoId=${videoId}&part=snippet&type=video&maxResults=${numberOfVideos}`;
+    let recommendedVideosURL = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&relatedToVideoId=${videoId}&part=snippet&type=video&maxResults=${numberOfVideos}`;
+
+    if (pageToken !== undefined){
+        recommendedVideosURL += "&pageToken=" + pageToken;
+    }
 
     getJsonDataFromURL(recommendedVideosURL, (callback) => {
 
         if (callback.status === NetworkResponse.failureStatus) {
             completion(callback); return;
         }
+
+        const nextPageToken = callback.result.nextPageToken;
+        const previousPageToken = callback.result.previousPageToken;
+    
         const ytIDs = callback.result.items.map((item) => {
             return item.id.videoId;
         })
 
-        getYoutubeVideosFor(ytIDs, (callback) => completion(callback));
+        getYoutubeVideosFor(ytIDs, (callback1) => {
+            const response = callback1.mapSuccess((result) => {
+                return new YoutubeAPIListReponse(result, previousPageToken, nextPageToken);
+            });
+            completion(response);
+        });
     });
 }
 
