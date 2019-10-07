@@ -219,17 +219,29 @@ export function getChannelForChannelID(channelID, completion) {
     });
 }
 
-export function getSearchResultsForSearchText(searchText, numberOfResults, completion) {
+export function getSearchResultsForSearchText({searchText, numberOfResults, pageToken, completion}) {
     numberOfResults = Math.max(Math.min(numberOfResults, 50), 1);
-    const url = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&part=snippet&maxResults=${numberOfResults}&q=${searchText}`;
+    let url = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&part=snippet&maxResults=${numberOfResults}&q=${searchText}`;
+    
+    if (pageToken !== undefined){
+        url += "&pageToken=" + pageToken;
+    }
     getJsonDataFromURL(url, (callback) => {
         if (callback.status === NetworkResponse.failureStatus) {
             completion(callback);
             return;
         }
+
+        const nextPageToken = callback.result.nextPageToken;
+        const previousPageToken = callback.result.previousPageToken;
         const videoIDs = callback.result.items.map((item) => item.id.videoId);
 
-        getYoutubeVideosFor(videoIDs, (callback) => completion(callback));
+        getYoutubeVideosFor(videoIDs, (callback1) => {
+            const newCallback = callback1.mapSuccess((result) => {
+                return new YoutubeAPIListReponse(result, previousPageToken, nextPageToken);
+            })
+            completion(newCallback)
+        });
 
     });
 }

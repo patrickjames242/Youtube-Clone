@@ -96,6 +96,14 @@ main{
 
 
 
+.search-results-holder > .loading-indicator-box{
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    height: 150px;
+
+}
+
 
 
 
