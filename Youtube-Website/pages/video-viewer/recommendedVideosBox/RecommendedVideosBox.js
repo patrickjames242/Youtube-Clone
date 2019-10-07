@@ -4,6 +4,7 @@ import * as Help from '/javascript/helpers.js';
 import * as YTHelpers from '/javascript/youtube-api.js';
 import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
 
+Help.addStyleSheetToDocument('/pages/video-viewer/recommendedVideosBox/recommendedVideosBox.css');
 
 export default class RecommendedVideosBox{
 
@@ -12,24 +13,31 @@ export default class RecommendedVideosBox{
         Object.assign(this, RecommendedVideosBox._getNodes());
     }
 
+    showMoreVideosButton = div({className: "show-more-videos-button"}, [text("show more")]);
+
 
     startFetchingVideos(){
         YTHelpers.getRecommendedVideosForVideoWithVideoID(this.videoID, 25, (callback) => {
 			if (callback.status !== NetworkResponse.successStatus) { return; }
             const videos = callback.result;
             const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
-			this.node.append(...recommendedVideoBoxes);
+            this.node.append(...recommendedVideoBoxes, this.showMoreVideosButton);
 		});
     }
 
+    onSideClass = "on-side";
 
+    notifyThatBoxWasPlacedOnTheSide(){
+        this.node.classList.add(this.onSideClass);
+    }
+
+    notifyThatBoxWasPlacedOnBottomOfDescriptionBox(){
+        this.node.classList.remove(this.onSideClass);
+    }
 
     static _getNodes() {
         const nodes = {};
-        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/recommendedVideosBox/recommendedVideosBox.css');
-        nodes.node = div({className: "all-recommended-videos-box"}, [
-            style
-        ]);
+        nodes.node = div({className: "all-recommended-videos-box"});
         return nodes;
     }
 }

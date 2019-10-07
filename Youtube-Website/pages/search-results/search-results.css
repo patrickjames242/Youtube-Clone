@@ -57,7 +57,8 @@ main{
 
 .search-results-holder > .cell .video-details,
 .search-results-holder > .cell .video-description{
-    font-size: 14px;
+    --font-size: 14px;
+    font-size: var(--font-size);
     color: rgb(100, 100, 100);
     
 }
@@ -69,9 +70,28 @@ main{
 }
 
 .search-results-holder > .cell .video-description{
+
+    --line-height: 1.4;
+    line-height: var(--line-height);
+    height: calc(var(--line-height) * var(--font-size) * 2);
     margin-top: 10px;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    overflow: hidden;
+
+    white-space: pre-line;
+
+    /* These are technically the same, but use both */
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+  
+	-ms-word-break: break-all;
+	
+	word-break: break-word;
+  
+	/* Adds a hyphen where the word breaks, if supported (No Blink) */
+	-ms-hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+	hyphens: auto;
 }
 
 

@@ -16,48 +16,26 @@ const videoID = (new URL(window.location)).searchParams.get("videoID");
 
 
 
-class ColumnsHolder{
-
-	constructor(videoID){
-		Object.assign(this, ColumnsHolder._getNodes(videoID));
+class ContentHolder {
+	constructor(videoID) {
+		this.videoID = videoID;
+		Object.assign(this, ContentHolder._getNodes(videoID));
+		this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnTheSide();
+		this._respondToWindowWidthDidChange();
+		this._setUpWindowWidthListener();
 	}
+
+	
 
 	startFetchingDataFromYoutube(){
-		this.videoColumnWrapper.startFetchingDataFromYoutube();
-		this.recommendedVideosBoxWrapper.startFetchingVideos();
-	}
-
-
-	static _getNodes(videoID){
-		const nodes = {};
-		nodes.videoColumnWrapper = new VideoColumn(videoID);
-		nodes.recommendedVideosBoxWrapper = new RecommendedVideosBox(videoID);
-		nodes.node = div({className: "columns-holder"}, [
-			nodes.videoColumnWrapper.node,
-			nodes.recommendedVideosBoxWrapper.node
-		])
-		return nodes;
-	}
-}
-
-
-
-
-class VideoColumn {
-
-	constructor(videoID) {
-		Object.assign(this, VideoColumn._getNodes(videoID));
-
-	}
-
-	startFetchingDataFromYoutube() {
-
+		
 		this.videoCommentsBoxWrapper.startFetchingComments();
+		this.recommendedVideosBoxWrapper.startFetchingVideos();
 
 		YTHelpers.getVideoObjectForVideoID(videoID, (callback) => {
 			if (callback.status !== NetworkResponse.successStatus) { return; }
 			const video = callback.result;
-	
+
 			this.videoTitleBoxWrapper.updateFromVideoObject(video);
 			this.videoDescriptionBoxWrapper.updateUsingVideoObject(video);
 			this.videoCommentsBoxWrapper.updateWithVideoObject(video);
@@ -70,37 +48,64 @@ class VideoColumn {
 		});
 	}
 
+	_setUpWindowWidthListener(){
+		window.onresize = () => {
+			this._respondToWindowWidthDidChange();
+		};
+	}
+
+	_respondToWindowWidthDidChange(){
+		if (window.innerWidth <= 900){
+			if (this.recommendedVideosBoxWrapper.node.parentNode !== this.videoColumn){
+				this.videoDescriptionBoxWrapper.node.after(this.recommendedVideosBoxWrapper.node);
+				this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnBottomOfDescriptionBox();
+			}
+		} else {
+			if (this.recommendedVideosBoxWrapper.node.parentNode !== this.node){
+				this.videoColumn.after(this.recommendedVideosBoxWrapper.node);
+				this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnTheSide();
+			}
+		}
+	}
 
 
 	static _getNodes(videoID) {
 		const nodes = {};
+		
 		nodes.videoTitleBoxWrapper = new VideoTitleBox();
 		nodes.videoDescriptionBoxWrapper = new VideoDescriptionBox();
 		nodes.videoCommentsBoxWrapper = new VideoCommentsBox(videoID);
+		nodes.recommendedVideosBoxWrapper = new RecommendedVideosBox(videoID);
 
-		nodes.node = div({ className: "video-column" }, [
-			div({ className: "video-box-holder" }, [
-				div({ className: "video-box" }, [
-					div({ id: "player" })
-				])
+		nodes.node = div({ className: "content-holder" }, [
+			nodes.videoColumn = div({ className: "video-column" }, [
+				div({ className: "video-box-holder" }, [
+					div({ className: "video-box" }, [
+						div({ id: "player" })
+					])
+				]),
+				nodes.videoTitleBoxWrapper.node,
+				nodes.videoDescriptionBoxWrapper.node,
+				nodes.videoCommentsBoxWrapper.node
 			]),
-			nodes.videoTitleBoxWrapper.node,
-			nodes.videoDescriptionBoxWrapper.node,
-			nodes.videoCommentsBoxWrapper.node
+			nodes.recommendedVideosBoxWrapper.node
 		]);
-
 		return nodes;
 	}
-
-
 }
+
+
+
+
+
+
 
 
 Help.addHeaderToDocument();
 
-const columnsHolder = new ColumnsHolder(videoID);
-document.querySelector("main").append(columnsHolder.node);
-columnsHolder.startFetchingDataFromYoutube();
+const contentHolder = new ContentHolder(videoID);
+document.querySelector("main").append(contentHolder.node);
+contentHolder.startFetchingDataFromYoutube();
 
 configureYoutubePlayer();
 
@@ -130,15 +135,3 @@ function configureYoutubePlayer() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-// 750

@@ -43,9 +43,3 @@ window.text = function text(string) {
 
 
 
-export function getStyleElementForStyleSheetAt(url){
-    const el = document.createElement("style");
-    el.textContent = `@import '${url}';`;
-    return el;
-}
-

@@ -5,6 +5,10 @@
 .all-recommended-videos-box{
 	display: grid;
 	grid-gap: 10px;
+	
+}
+
+.all-recommended-videos-box.on-side{
 	width: 360px;
 }
 

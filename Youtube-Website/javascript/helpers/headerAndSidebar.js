@@ -1,21 +1,35 @@
 
-import * as HTMLHelp from './htmlHelpers.js';
+import './htmlHelpers.js';
+import * as HelperFunctions from './helperFunctions.js';
+
 import { parseHTMLFrom } from './helperFunctions.js';
 import { SVGIcons } from './svg-icons.js';
 
 
+
 export function addHeaderToDocument() {
+	addheaderStyleSheet();	
 	document.body.prepend(getNewHeader());
 }
 
 export function addHeaderAndSideBarToDocument() {
+	addheaderStyleSheet();
+	addSidebarStyleSheet();
 	document.body.prepend(getNewHeader(), getNewSideBarNode());
 }
 
+function addheaderStyleSheet(){
+	HelperFunctions.addStyleSheetToDocument('/css/header.css');
+}
+
+function addSidebarStyleSheet(){
+	HelperFunctions.addStyleSheetToDocument('/css/sidebar.css');
+}
+
 function getNewHeader() {
-	const style = HTMLHelp.getStyleElementForStyleSheetAt('/css/header.css');
+	
 	return header({}, [
-		style,
+	
 		div({ className: "header-content" }, [
 			div({ className: "left-content" }, [
 				div({ className: "menu-icon header-icon unsupported-feature-button" }, [
@@ -61,9 +75,9 @@ function getNewHeader() {
 
 
 function getNewSideBarNode() {
-	const style = HTMLHelp.getStyleElementForStyleSheetAt('/css/sidebar.css');
+	
 	return div({ className: "side-bar" }, [
-		style,
+		
 		div({ className: "wide-content" }, [
 			div({ className: "cell-segment underlined" }, [
 				...([
@@ -167,10 +181,6 @@ function getNewWideIconCell(labelTitle) {
 		])
 	]);
 }
-
-
-
-
 
 
 

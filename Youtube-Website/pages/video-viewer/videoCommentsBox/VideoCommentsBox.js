@@ -5,6 +5,7 @@ import * as YTHelpers from '/javascript/youtube-api.js';
 import CommentBox from './CommentBox.js';
 import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
 
+Help.addStyleSheetToDocument('/pages/video-viewer/videoCommentsBox/videoComments.css');
 
 export default class VideoCommentsBox{
 
@@ -66,10 +67,10 @@ export default class VideoCommentsBox{
     static _getNodes(){
         const nodes = {};
 
-        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/videoCommentsBox/videoComments.css');
+        
 
         nodes.node = div({className: "all-video-comments-box"}, [
-            style,
+        
             nodes.numberOfCommentsBox = p({className: "num-of-comments"}),
             div({className: "add-comment-box"}, [
                 img({className: "profile-image",src: "/images/blank_user.png"}),

@@ -2,6 +2,9 @@
 import * as Help from '/javascript/helpers.js';
 import {SVGIcons} from '/javascript/helpers/svg-icons.js';
 
+
+Help.addStyleSheetToDocument('/pages/video-viewer/videoTitleBox/videoTitleBox.css');
+
 export default class VideoTitleBox{
     constructor(){
         Object.assign(this, VideoTitleBox._getNodes());
@@ -12,17 +15,17 @@ export default class VideoTitleBox{
         this.numberOfViewsBox.innerHTML = Help.getLongNumberStringFrom(video.numOfViews) + " views";
         this.numberOfLikesBox.innerHTML = Help.getShortNumberStringFrom(video.numOfLikes);
         this.numberOfDislikesBox.innerHTML = Help.getShortNumberStringFrom(video.numOfDislikes);
-        this.watchOnYoutubeLink.setAttribute("href", "https://www.youtube.com?watch=" + video.id);
+        this.watchOnYoutubeLink.setAttribute("href", "https://www.youtube.com/watch?v=" + video.id);
     }
 
 
     static _getNodes(){
         const nodes = {};
 
-        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/videoTitleBox/videoTitleBox.css');
+        
 
         nodes.node = div({className: "video-title-box underlined"}, [
-            style,
+        
             nodes.titleBox = p({className: "title"}),
             nodes.numberOfViewsBox = p({className: "subtitle views"}),
             div({className: "bottom-right-content-box"}, [

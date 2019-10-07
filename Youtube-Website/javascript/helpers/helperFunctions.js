@@ -1,6 +1,12 @@
 import { documentDidLoadNotification } from "./notifications.js";
 
-
+export function addStyleSheetToDocument(url){
+	const link = document.createElement("link");
+	link.setAttribute("rel", "stylesheet");
+	link.setAttribute("type", "text/css");
+	link.setAttribute("href", url);
+	document.head.append(link);
+}
 
 export function getLinkToVideoViewerFile(videoID){
 	return `/pages/video-viewer/video-viewer.html?videoID=${videoID}`;

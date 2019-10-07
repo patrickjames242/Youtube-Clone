@@ -42,18 +42,15 @@ function getNewSearchResultsCell(video){
             videoDetails = p({className: "video-details clamp", ["data-max-lines"]: "1"}, [
                 text(`${video.channelTitle} • ${Help.getShortNumberStringFrom(video.numOfViews) + " views"} • ${Help.getTimeSinceDateStringFrom(video.publishedAtDate)}`)
             ]),
-            // p({className: "video-description clamp", ["data-max-lines"]: "2"}, [
-            //     text(video.description)
-            // ]}),
             videoDescription = p({className: "video-description clamp", ["data-max-lines"]: "2"}, [
-                text("Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo ex consectetur sunt maiores a vel ea beatae provident dolore delectus natus ipsam quibusdam porro perferendis eligendi nam esse, corporis velit fugit reprehenderit fuga! Temporibus consequuntur quisquam accusantium fugit reprehenderit rerum voluptate suscipit id nemo ducimus exercitationem quo fugiat, eaque in?")
-
-
-                // text("alskdjfalksdjflkasjdflkajsdlkfjasldkfjlaksdjflkasdjlfkajsdlkfjslkdjflskdjflksdjflksdjflksdjflkjsdlkfjsdlkfjsdlkfjsldkjflksdjflksdjlfkjsdlkfjsdlkfjsdlkfjsdlkjflksdjflksdjflksjdlkfjsdklfjsdklfjksdjfklsdjfksjdkfjsdklfjsdkljflksdjfklsdjlfjsdljfs")
+                text(video.description)
             ])
+           
         ])
     ]);
 
-    [title, videoDetails, videoDescription].forEach((e) => Help.applyClampToElement(e));
+    [title, videoDetails, 
+        // videoDescription
+    ].forEach((e) => Help.applyClampToElement(e));
     return node;
 }

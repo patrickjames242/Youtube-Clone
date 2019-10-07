@@ -4,6 +4,9 @@
 import * as Help from '/javascript/helpers.js';
 
 
+Help.addStyleSheetToDocument('/pages/video-viewer/descriptionBox/descriptionBox.css');
+
+
 export default class VideoDescriptionBox {
 
 	constructor() {
@@ -60,11 +63,9 @@ export default class VideoDescriptionBox {
 		properties.descriptionTextBox = p({ className: "description-text" });
         properties.showMoreButton = div({ className: "show-more-button uppercase-text-button"});
         
-        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/descriptionBox/descriptionBox.css');
+        
 
 		properties.node = div({ className: "video-description-box underlined" }, [
-
-            style,
 
 			div({ className: "channel-info" }, [
 				properties.channelImageBox = div({ className: "channel-image" }),

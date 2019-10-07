@@ -1,9 +1,9 @@
 
 import NetworkResponse from "./helpers/NetworkResponse.js"; 
 
-const ytAPIKey = "AIzaSyDvO-B0N8F6yG_Yh2_7PiEpp1r9dTHiiaE";
+// const ytAPIKey = "AIzaSyDvO-B0N8F6yG_Yh2_7PiEpp1r9dTHiiaE";
 
-// const ytAPIKey = "AIzaSyDXn6ZJ1Zi01Zlp8irQY0g_Z-WBgR7UDdc";
+const ytAPIKey = "AIzaSyDXn6ZJ1Zi01Zlp8irQY0g_Z-WBgR7UDdc";
 
 export class YoutubeAPIListReponse{
     constructor(itemList, previousPageToken, nextPageToken){
