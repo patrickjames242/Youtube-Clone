@@ -7,14 +7,12 @@ import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
 
 
 import VideoDescriptionBox from './descriptionBox/DescriptionBox.js';
-import VideoCommentsBox from './videoReviewsBox/VideoReviewsBox.js'
+import VideoCommentsBox from './videoCommentsBox/VideoCommentsBox.js'
 import RecommendedVideosBox from './recommendedVideosBox/RecommendedVideosBox.js';
-import VideoTitleBox from './videoTitleBox.js';
+import VideoTitleBox from './videoTitleBox/VideoTitleBox.js';
+
 
 const videoID = (new URL(window.location)).searchParams.get("videoID");
-
-
-
 
 
 

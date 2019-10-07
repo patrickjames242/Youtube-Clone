@@ -12,13 +12,17 @@ export default class VideoTitleBox{
         this.numberOfViewsBox.innerHTML = Help.getLongNumberStringFrom(video.numOfViews) + " views";
         this.numberOfLikesBox.innerHTML = Help.getShortNumberStringFrom(video.numOfLikes);
         this.numberOfDislikesBox.innerHTML = Help.getShortNumberStringFrom(video.numOfDislikes);
+        this.watchOnYoutubeLink.setAttribute("href", "https://www.youtube.com?watch=" + video.id);
     }
 
 
     static _getNodes(){
         const nodes = {};
 
+        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/videoTitleBox/videoTitleBox.css');
+
         nodes.node = div({className: "video-title-box underlined"}, [
+            style,
             nodes.titleBox = p({className: "title"}),
             nodes.numberOfViewsBox = p({className: "subtitle views"}),
             div({className: "bottom-right-content-box"}, [
@@ -36,7 +40,9 @@ export default class VideoTitleBox{
                         nodes.numberOfDislikesBox = p({className: "num"})
                     ])
                 ]),
-                nodes.watchOnYoutubeLink = a({href: "", className: "watch-on-youtube-link uppercase-text-button", target: "_target"}, [text("watch on youtube")])
+                nodes.watchOnYoutubeLink = a({href: "", className: "watch-on-youtube-link uppercase-text-button", target: "_target"}, [
+                    text("watch on youtube")
+                ])
             ])
         ])
 

@@ -1,25 +1,25 @@
 
 main{
-	max-width: 1750px;
-	margin-left: auto;
-	margin-right: auto;
+	
 	
 }
 
 .columns-holder{
-	display: flex;
-	align-items: flex-start;
-	margin: 20px;
+	max-width: 1750px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-columns: 1fr auto;
+	align-content: center;
+	align-items: start;
+	
+	
+	grid-gap: 20px;	
+
 }
-
-.columns-holder > *{
-	flex: 1;
-}
-
-
-
-
-
 
 
 
@@ -45,7 +45,6 @@ main{
 	right: 0;
 }
 
-/* -----------------------*/
 
 
 
@@ -54,160 +53,3 @@ main{
 
 
 
-/* recommended videos section */
-
-.recommended-videos-column{
-	
-	display: grid;
-	grid-gap: 10px;
-	
-}
-
-
-
-/* this class is added to the recommended-videos-section
-when it is displayed at the bottom of the video as opposed to the side */
-
-.recommended-videos-column-whenOnBottom{
-	margin-top: 20px;
-}
-
-/* this class is added to the recommended-videos-section
-when it is displayed at side of the video as apposed to the bottom */
-
-.recommended-videos-section-whenOnSide{
-	margin-left: 20px;
-	max-width: 360px;
-}
-
-.recommended-videos-section .show-more-videos-button{
-	--highlight-color: #065fd4; 
-	height: 35px;
-	border-radius: 3px;
-	border: 1px solid var(--highlight-color);
-	display: grid;
-	align-content: center;
-	justify-content: center;
-	color: var(--highlight-color);
-	text-transform: uppercase;
-	font-weight: 500;
-	font-size: 13px;
-	cursor: pointer;
-}
-
-
-
-.recommended-video-box{
-	display: flex;
-}
-
-.recommended-video-thumbnail{
-	background-color: black;
-
-	--height: 85px;
-	height: var(--height);
-	width: calc((16/9) * var(--height));
-	flex-shrink: 0;
-	position: relative;
-}
-
-.recommended-video-thumbnail > img{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.recommended-video-info-box{
-	margin-left: 10px;
-	font-size: 13.5px;
-}
-
-.recommended-video-info-box *{
-	margin-bottom: 5px;
-}
-
-/*----------------------------*/
-
-
-
-/* video title box */
-
-.video-title-box{
-	padding: 20px 0;
-	position: relative;
-}
-
-.video-title-box > .title{
-	margin-bottom: 10px;
-	font-size: 17px;
-}
-
-.video-title-box > .views{
-	font-size: 15px;
-}
-
-
-
-.video-title-box .bottom-right-content-box{
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	height: 50px;
-
-	display: grid;
-	grid-auto-flow: column;
-	grid-gap: 30px;
-}
-
-.video-title-box .watch-on-youtube-link{
-	align-self: center;
-	font-weight: 500;
-}
-
-.video-title-box .like-dislike-box{
-	display: grid;
-	grid-auto-flow: column;
-	grid-gap: 20px;
-	align-self: stretch;
-	
-	box-shadow: inset 0 -2px 0 rgb(144, 144, 144);
-
-}
-
-.video-title-box .like-dislike-box > div{
-	display: grid;
-	grid-auto-flow: column;
-	grid-gap: 10px;
-	align-items: center;
-}
-
-.video-title-box .like-dislike-box .icon{
-	width: 20px;
-	height: 20px;
-}
-
-
-
-.video-title-box .like-dislike-box .icon > svg{
-	fill: rgb(144, 144, 144);
-}
-
-.video-title-box .like-dislike-box .num{
-	font-size: 13px;
-	font-weight: 500;
-	color: rgb(90, 90, 90);
-}
-
-
-/* ------------------*/
-
-
-
-
-
-/* video reviews */
-
-/* add a comment box*/

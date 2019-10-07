@@ -22,18 +22,14 @@ export default class RecommendedVideosBox{
 		});
     }
 
-    notifyThatBoxIsOnBottom(){
-
-    }
-
-    notifyThatBoxIsOnRight(){
-
-    }
 
 
     static _getNodes() {
         const nodes = {};
-        nodes.node = section({className: "recommended-videos-column recommended-videos-column-whenOnSide"});
+        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/recommendedVideosBox/recommendedVideosBox.css');
+        nodes.node = div({className: "all-recommended-videos-box"}, [
+            style
+        ]);
         return nodes;
     }
 }
@@ -43,6 +39,7 @@ export default class RecommendedVideosBox{
 function getRecommendedVideoBoxFor(video) {
 
     let videoTitle, channelTitle, numOfViews;
+
 
     const node = a({ className: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id) }, [
         div({ className: "recommended-video-thumbnail" }, [
@@ -61,8 +58,3 @@ function getRecommendedVideoBoxFor(video) {
 
     return node;
 }
-
-
-
-
-

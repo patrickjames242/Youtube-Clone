@@ -24,7 +24,6 @@ export default class VideoCommentsBox{
     }
 
 
-
     _loadingIndicatorBox = div({className: "loading-indicator-box"}, [
         div({className: "loading-indicator"})
     ]);
@@ -67,9 +66,9 @@ export default class VideoCommentsBox{
     static _getNodes(){
         const nodes = {};
 
-        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/videoReviewsBox/videoReviews.css');
+        const style = Help.getStyleElementForStyleSheetAt('/pages/video-viewer/videoCommentsBox/videoComments.css');
 
-        nodes.node = div({className: "video-reviews"}, [
+        nodes.node = div({className: "all-video-comments-box"}, [
             style,
             nodes.numberOfCommentsBox = p({className: "num-of-comments"}),
             div({className: "add-comment-box"}, [
