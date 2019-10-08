@@ -8,7 +8,6 @@ import NetworkResponse from "/javascript/helpers/NetworkResponse.js";
 
 export default class CommentBox {
 
-
 	constructor(comment) {
 		this.comment = comment;
 		Object.assign(this, getCommentBoxNodeProperties(comment));

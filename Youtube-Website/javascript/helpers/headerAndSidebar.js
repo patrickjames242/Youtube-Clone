@@ -8,7 +8,7 @@ import { SVGIcons } from './svg-icons.js';
 
 
 export function addHeaderToDocument() {
-	addheaderStyleSheet();	
+	addheaderStyleSheet();
 	document.body.prepend(getNewHeader());
 }
 
@@ -18,18 +18,26 @@ export function addHeaderAndSideBarToDocument() {
 	document.body.prepend(getNewHeader(), getNewSideBarNode());
 }
 
-function addheaderStyleSheet(){
+function addheaderStyleSheet() {
 	HelperFunctions.addStyleSheetToDocument('/css/header.css');
 }
 
-function addSidebarStyleSheet(){
+function addSidebarStyleSheet() {
 	HelperFunctions.addStyleSheetToDocument('/css/sidebar.css');
 }
 
 function getNewHeader() {
-	
-	return header({}, [
-	
+
+	let textField, searchButtonBox, searchBoxForm;
+
+	window.shouldAllowSearchTextBoxFormSubmission = () => {
+		return textField.value !== undefined &&
+			textField.value !== null &&
+			textField.value.trim() !== "";
+	}
+
+	const headerToReturn = header({}, [
+
 		div({ className: "header-content" }, [
 			div({ className: "left-content" }, [
 				div({ className: "menu-icon header-icon unsupported-feature-button" }, [
@@ -43,10 +51,10 @@ function getNewHeader() {
 			div({ className: "center-content" }, [
 				div({ className: "search-box-container" }, [
 					div({ className: "search-box" }, [
-						form({ action: "/pages/search-results/search-results.html" }, [
-							input({ className: "search-placeholder subtitle", type: "search", placeholder: "Search", size: "1", name: "searchText" })
+					 	searchBoxForm = form({ action: "/pages/search-results/search-results.html", onsubmit: "return shouldAllowSearchTextBoxFormSubmission();" }, [
+							textField = input({ className: "search-placeholder subtitle", type: "search", placeholder: "Search", size: "1", name: "searchText" })
 						]),
-						div({ className: "search-button-box" }, [
+						searchButtonBox = div({ className: "search-button-box" }, [
 							div({ className: "search-icon" }, [
 								...parseHTMLFrom(SVGIcons.searchIcon())
 							])
@@ -69,15 +77,23 @@ function getNewHeader() {
 			])
 		])
 	]);
+
+	searchButtonBox.addEventListener("click", () => {
+		if (window.shouldAllowSearchTextBoxFormSubmission()){
+			searchBoxForm.submit();
+		}
+	});
+
+	return headerToReturn;
 }
 
 
 
 
 function getNewSideBarNode() {
-	
+
 	return div({ className: "side-bar" }, [
-		
+
 		div({ className: "wide-content" }, [
 			div({ className: "cell-segment underlined" }, [
 				...([
