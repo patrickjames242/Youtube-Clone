@@ -24,7 +24,6 @@ export default class VideoDescriptionBox {
 			this.descriptionTextBox.innerHTML = video.description;
 			this._collapseDescriptionTextInitiallyIfNeeded();
 		}
-
 	}
 
 	updateUsingChannelObject(channel) {

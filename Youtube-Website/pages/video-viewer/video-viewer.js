@@ -130,7 +130,7 @@ function configureYoutubePlayer() {
 	window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
 	function onPlayerReady(event) {
-		// player.playVideo();
+		player.playVideo();
 	}
 }
 

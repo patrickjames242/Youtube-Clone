@@ -57,7 +57,6 @@ export default class RecommendedVideosBox{
     
 
     
-
     _currentPaginationObserver;
 
     _currentNextPageToken;
