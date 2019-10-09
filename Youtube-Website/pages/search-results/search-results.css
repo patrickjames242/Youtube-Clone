@@ -79,7 +79,7 @@ main{
 
     white-space: pre-line;
 
-    /* These are technically the same, but use both */
+    
 	overflow-wrap: break-word;
 	word-wrap: break-word;
   
@@ -87,7 +87,7 @@ main{
 	
 	word-break: break-word;
   
-	/* Adds a hyphen where the word breaks, if supported (No Blink) */
+	
 	-ms-hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;

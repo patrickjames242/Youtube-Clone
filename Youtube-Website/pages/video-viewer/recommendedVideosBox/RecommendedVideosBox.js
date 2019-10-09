@@ -101,10 +101,7 @@ export default class RecommendedVideosBox{
     // because sometimes the yotuube api sends videos in one page that were already sent in the previous ones.
     _filterThroughNewlyFetchedVideos(videos){
         const filteredVideos = videos.filter(x => {
-            for (const y of this._previouslyFetchedVideos){
-                if (y.id === x.id){return false};
-            }
-            return true;
+            return this._previouslyFetchedVideos.includesWhere(y => {y.id === x.id}) === false;
         });
         this._previouslyFetchedVideos.push(...filteredVideos);
         return filteredVideos;

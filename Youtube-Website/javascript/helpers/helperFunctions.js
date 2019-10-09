@@ -1,5 +1,5 @@
 
-import { documentDidLoadNotification } from "./notifications.js";
+
 
 export function addStyleSheetToDocument(url) {
 	const link = document.createElement("link");
@@ -120,4 +120,9 @@ export function setUpPaginationObserverOn(element, callback) {
 }
 
 
-
+Array.prototype.includesWhere = function(predicate){
+	for (const item of this){
+		if (predicate(item) === true){return true;}
+	}
+	return false;
+}
