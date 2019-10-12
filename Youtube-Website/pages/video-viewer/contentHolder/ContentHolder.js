@@ -17,14 +17,14 @@ export default class ContentHolder {
 		this.videoID = videoID;
 		Object.assign(this, ContentHolder._getNodes(videoID));
 		this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnTheSide();
-		this._respondToWindowWidthDidChange();
-		this._setUpWindowWidthListener();
+		this._respondToWindowResize();
+		this._setUpWindowResizeObserver();
 	}
 
-	
 
-	startFetchingDataFromYoutube(){
-		
+
+	startFetchingDataFromYoutube() {
+
 		this.videoCommentsBoxWrapper.startFetchingComments();
 		this.recommendedVideosBoxWrapper.startFetchingVideos();
 
@@ -44,22 +44,36 @@ export default class ContentHolder {
 		});
 	}
 
-	_setUpWindowWidthListener(){
+	_setUpWindowResizeObserver(){
 		window.onresize = () => {
-			this._respondToWindowWidthDidChange();
+			this._respondToWindowResize();
 		};
 	}
 
-	_respondToWindowWidthDidChange(){
-		if (window.innerWidth <= 900){
-			if (this.recommendedVideosBoxWrapper.node.parentNode !== this.videoColumn){
-				this.videoDescriptionBoxWrapper.node.after(this.recommendedVideosBoxWrapper.node);
-				this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnBottomOfDescriptionBox();
+	_collapsedClassString = "collapsed";
+
+	get _isCollapsed(){
+		return this.node.classList.contains(this._collapsedClassString);
+	}
+
+	set _isCollapsed(newValue){
+		if (newValue){
+			this.node.classList.add(this._collapsedClassString);
+			this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnBottomOfDescriptionBox();
+		} else {
+			this.node.classList.remove(this._collapsedClassString);
+			this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnTheSide();
+		}
+	}
+
+	_respondToWindowResize(){
+		if (window.innerWidth >= 1000){
+			if (this._isCollapsed){
+				this._isCollapsed = false;
 			}
 		} else {
-			if (this.recommendedVideosBoxWrapper.node.parentNode !== this.node){
-				this.videoColumn.after(this.recommendedVideosBoxWrapper.node);
-				this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnTheSide();
+			if (this._isCollapsed === false){
+				this._isCollapsed = true;
 			}
 		}
 	}
@@ -67,24 +81,30 @@ export default class ContentHolder {
 
 	static _getNodes(videoID) {
 		const nodes = {};
-		
+
 		nodes.videoTitleBoxWrapper = new VideoTitleBox();
 		nodes.videoDescriptionBoxWrapper = new VideoDescriptionBox();
 		nodes.videoCommentsBoxWrapper = new VideoCommentsBox(videoID);
 		nodes.recommendedVideosBoxWrapper = new RecommendedVideosBox(videoID);
 
 		nodes.node = div({ className: "content-holder" }, [
-			nodes.videoColumn = div({ className: "video-column" }, [
-				div({ className: "video-box-holder" }, [
-					div({ className: "video-box" }, [
-						div({ id: "player" })
-					])
-				]),
-				nodes.videoTitleBoxWrapper.node,
-				nodes.videoDescriptionBoxWrapper.node,
-				nodes.videoCommentsBoxWrapper.node
+			div({ className: "grid-video-box-block" }, [
+				div({ className: "video-box" }, [
+					div({ id: "player" })
+				])
 			]),
-			nodes.recommendedVideosBoxWrapper.node
+			div({ className: "grid-title-box-block" }, [
+				nodes.videoTitleBoxWrapper.node,
+			]),
+			div({ className: "grid-description-box-block" }, [
+				nodes.videoDescriptionBoxWrapper.node,
+			]),
+			div({ className: "grid-comments-box-block" }, [
+				nodes.videoCommentsBoxWrapper.node,
+			]),
+			div({ className: "grid-recommended-videos-box-block" }, [
+				nodes.recommendedVideosBoxWrapper.node
+			])
 		]);
 		return nodes;
 	}

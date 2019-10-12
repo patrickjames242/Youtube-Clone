@@ -12,51 +12,50 @@ const RecVideosBoxPosition = {
     ON_BOTTOM: Symbol('on_bottom')
 }
 
-export default class RecommendedVideosBox{
+export default class RecommendedVideosBox {
 
-    constructor(videoID){
+    constructor(videoID) {
         this.videoID = videoID;
         Object.assign(this, RecommendedVideosBox._getNodes());
         this._attatchShowMoreVideosButtonClickListener();
     }
 
-    startFetchingVideos(){
+    startFetchingVideos() {
         this._fetchAdditionalVideosFromYoutube();
     }
 
-    _onSideClass = "on-side";
+    _currentPosition = RecVideosBoxPosition.ON_BOTTOM;
 
-    notifyThatBoxWasPlacedOnTheSide(){
+    notifyThatBoxWasPlacedOnTheSide() {
+        this._currentPosition = RecVideosBoxPosition.ON_SIDE;
         this._attachPaginationObserverToLastRecommendedVideoBox();
-        this.node.classList.add(this._onSideClass); 
         this._updateShowMoreButtonVisibility();
     }
 
-    notifyThatBoxWasPlacedOnBottomOfDescriptionBox(){
-        if (this._currentPaginationObserver !== undefined){
+    notifyThatBoxWasPlacedOnBottomOfDescriptionBox() {
+        this._currentPosition = RecVideosBoxPosition.ON_BOTTOM;
+        if (this._currentPaginationObserver !== undefined) {
             this._currentPaginationObserver.disconnect();
         }
-        this.node.classList.remove(this._onSideClass);
         this._updateShowMoreButtonVisibility();
     }
 
-    get _currentPosition(){
-        return this.node.classList.contains(this._onSideClass) ? RecVideosBoxPosition.ON_SIDE : RecVideosBoxPosition.ON_BOTTOM;
+
+
+
+    get _shouldShowMoreVideosButtonBeShown() {
+        return this._currentPosition === RecVideosBoxPosition.ON_BOTTOM &&
+            this._videosAreCurrentlyBeingFetched === false &&
+            this._currentNextPageToken !== undefined;
     }
 
-    get _shouldShowMoreVideosButtonBeShown(){
-        return this._currentPosition === RecVideosBoxPosition.ON_BOTTOM && 
-        this._videosAreCurrentlyBeingFetched === false &&
-        this._currentNextPageToken !== undefined;
-    }
-
-    _updateShowMoreButtonVisibility(){
+    _updateShowMoreButtonVisibility() {
         this.showMoreVideosButton.isHidden = this._shouldShowMoreVideosButtonBeShown === false;
     }
 
-    
 
-    
+
+
     _currentPaginationObserver;
 
     _currentNextPageToken;
@@ -65,81 +64,82 @@ export default class RecommendedVideosBox{
 
     _videosAreCurrentlyBeingFetched = false;
 
-    
-    
-    _fetchAdditionalVideosFromYoutube(nextPageToken){
-        
+
+    _fetchAdditionalVideosFromYoutube(nextPageToken) {
+
         this.loadingIndicatorBox.isHidden = false;
-     
+
         this._videosAreCurrentlyBeingFetched = true;
         this._updateShowMoreButtonVisibility();
-        
-        YTHelpers.getRecommendedVideosForVideoWithVideoID({videoId: this.videoID, numberOfVideos: 15, pageToken: nextPageToken, completion: (callback) => {
-            this._videosAreCurrentlyBeingFetched = false;
-            this.loadingIndicatorBox.isHidden = true;
-            this._updateShowMoreButtonVisibility();
-			if (callback.status !== NetworkResponse.successStatus) { return; }
-            
-            const videos = this._filterThroughNewlyFetchedVideos(callback.result.itemList);
 
-            const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
-            this.videosHolder.append(...recommendedVideoBoxes);
-            
-            this._currentLastRecommendedVideoBox = recommendedVideoBoxes[recommendedVideoBoxes.length - 1];
-            this._currentNextPageToken = callback.result.nextPageToken;
+        YTHelpers.getRecommendedVideosForVideoWithVideoID({
+            videoId: this.videoID, numberOfVideos: 15, pageToken: nextPageToken, completion: (callback) => {
+                this._videosAreCurrentlyBeingFetched = false;
+                this.loadingIndicatorBox.isHidden = true;
+                this._updateShowMoreButtonVisibility();
+                if (callback.status !== NetworkResponse.successStatus) { return; }
 
-            this._updateShowMoreButtonVisibility();
+                const videos = this._filterThroughNewlyFetchedVideos(callback.result.itemList);
 
-            if (this._currentPosition === RecVideosBoxPosition.ON_SIDE){
-                this._attachPaginationObserverToLastRecommendedVideoBox();
+                const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
+                this.videosHolder.append(...recommendedVideoBoxes);
+
+                this._currentLastRecommendedVideoBox = recommendedVideoBoxes[recommendedVideoBoxes.length - 1];
+                this._currentNextPageToken = callback.result.nextPageToken;
+
+                this._updateShowMoreButtonVisibility();
+
+                if (this._currentPosition === RecVideosBoxPosition.ON_SIDE) {
+                    this._attachPaginationObserverToLastRecommendedVideoBox();
+                }
             }
-		}});
+        });
     }
 
     _previouslyFetchedVideos = [];
 
     // because sometimes the yotuube api sends videos in one page that were already sent in the previous ones.
-    _filterThroughNewlyFetchedVideos(videos){
+    _filterThroughNewlyFetchedVideos(videos) {
         const filteredVideos = videos.filter(x => {
-            return this._previouslyFetchedVideos.includesWhere(y => {y.id === x.id}) === false;
+            return this._previouslyFetchedVideos.includesWhere(y => { y.id === x.id }) === false;
         });
         this._previouslyFetchedVideos.push(...filteredVideos);
         return filteredVideos;
     }
 
-    _attachPaginationObserverToLastRecommendedVideoBox(){
+    _attachPaginationObserverToLastRecommendedVideoBox() {
         const lastVideoBox = this._currentLastRecommendedVideoBox;
         const nextPageToken = this._currentNextPageToken;
-        if (lastVideoBox !== undefined && 
-            nextPageToken !== undefined){
+        if (lastVideoBox !== undefined &&
+            nextPageToken !== undefined) {
             this._currentPaginationObserver = Help.setUpPaginationObserverOn(lastVideoBox, () => {
                 this._fetchAdditionalVideosFromYoutube(nextPageToken);
             });
         }
     }
 
-    
 
-    _attatchShowMoreVideosButtonClickListener(){
+
+    _attatchShowMoreVideosButtonClickListener() {
         this.showMoreVideosButton.addEventListener('click', () => {
             this._respondToShowMoreVideosButtonClicked();
         });
     }
 
-    _respondToShowMoreVideosButtonClicked(){
+    _respondToShowMoreVideosButtonClicked() {
         this._fetchAdditionalVideosFromYoutube(this._currentNextPageToken);
     }
 
 
     static _getNodes() {
         const nodes = {};
-        nodes.node = div({className: "all-recommended-videos-box"}, [
-            nodes.videosHolder = div({className: "videos-holder"}),
-            nodes.bottomContentHolder = div({className: "bottom-content-holder"}, [
-                nodes.loadingIndicatorBox = div({className: "loading-indicator-box"}, [
-                    div({className: "loading-indicator"})
+        nodes.node = div({ className: "all-recommended-videos-box" }, [
+            nodes.videosHolder = div({ className: "videos-holder" }),
+            nodes.bottomContentHolder = div({ className: "bottom-content-holder" }, [
+                nodes.loadingIndicatorBox = div({ className: "loading-indicator-box" }, [
+                    div({ className: "loading-indicator" })
                 ]),
-                nodes.showMoreVideosButton = div({className: "show-more-videos-button"}, [
+                nodes.showMoreVideosButton = div({ className: "show-more-videos-button" }, [
                     text("show more")
                 ])
             ])
@@ -158,11 +158,15 @@ function getRecommendedVideoBoxFor(video) {
 
     const node = a({ className: "recommended-video-box", href: Help.getLinkToVideoViewerFile(video.id) }, [
         div({ className: "recommended-video-thumbnail" }, [
-            img({src: video.thumbnailURL})
+            img({ src: video.thumbnailURL })
         ]),
         div({ className: "recommended-video-info-box" }, [
-            videoTitle = p({ className: "recommended-video-title clamp", ["data-max-lines"]: "2" }, [text(video.title)]),
-            channelTitle = p({ className: "subtitle clamp", ["data-max-lines"]: "1" }, [text(video.channelTitle)]),
+            videoTitle = p({ className: "recommended-video-title clamp", ["data-max-lines"]: "2" }, [
+                text(video.title)
+            ]),
+            channelTitle = p({ className: "subtitle clamp", ["data-max-lines"]: "1" }, [
+                text(video.channelTitle)
+            ]),
             numOfViews = p({ className: "subtitle clamp", ["data-max-lines"]: "1" }, [
                 text(Help.getShortNumberStringFrom(video.numOfViews) + " views")
             ])

@@ -49,9 +49,11 @@ export const documentBodyDidChangeNotification = new Notification();
 
 export function executeWhenDocumentIsLoaded(action) {
 	if (document.readyState === "loading") {
-		documentDidLoadNotification.anonymousListen(() => {
+		const symbol = Symbol("notification")
+		documentDidLoadNotification.listen(symbol, () => {
 			action();
-		})
+			documentBodyDidChangeNotification.removeListener(symbol);
+		});
 	} else {
 		action();
 	}

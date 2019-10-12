@@ -8,17 +8,11 @@
 	
 }
 
-.all-recommended-videos-box.on-side{
-	width: 360px;
-}
-
 
 .all-recommended-videos-box > .videos-holder{
 	display: grid;
 	grid-gap: 10px;
 }
-
-
 
 
 .recommended-video-box{

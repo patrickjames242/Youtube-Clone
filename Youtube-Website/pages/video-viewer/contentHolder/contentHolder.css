@@ -2,37 +2,49 @@
 
 .content-holder{
 	max-width: 1750px;
+	min-width: 440px;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 20px;
 
-	display: grid;
-	grid-auto-flow: column;
-	grid-template-columns: 1fr;
-	grid-auto-columns: auto;
-	align-content: center;
 	align-items: start;
 	
-	
-	grid-gap: 20px;	
-
-}
-
-
-
-
-
-
-.video-column{
-	min-width: 400px;
 	display: grid;
 	grid-gap: 20px;
+	padding: 20px;
+	
+
+	grid-template-columns: 1fr auto;
+	grid-template-rows: auto auto auto 1fr;
+
+	grid-template-areas:
+		"video-box recommendations"
+		"title-box recommendations"
+		"description-box recommendations"
+		"comments-box recommendations";
 }
 
-.video-box-holder{
+.content-holder.collapsed{
+
+	grid-template-columns: auto;
+	grid-template-rows: auto auto auto auto 1fr;
+	grid-template-areas:
+		"video-box"
+		"title-box"
+		"description-box"
+		"recommendations"
+		"comments-box";
+}
+
+.content-holder.collapsed .grid-recommended-videos-box-block{
+	width: initial;
+}
+
+
+.grid-video-box-block{
 	width: 100%;
-	padding-top: 56.25%;
 	position: relative;
+	padding-top: 56.25%;
+	grid-area: video-box;
 }
 
 .video-box{
@@ -45,10 +57,21 @@
 }
 
 
+.grid-title-box-block{
+	grid-area: title-box;
+}
 
+.grid-description-box-block {
+	grid-area: description-box;
+}
 
+.grid-comments-box-block {
+	grid-area: comments-box;
+}
 
-
-
+.grid-recommended-videos-box-block {
+	width: 400px;
+	grid-area: recommendations;
+}
 
 
