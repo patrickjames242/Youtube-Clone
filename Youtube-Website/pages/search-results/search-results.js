@@ -26,29 +26,30 @@ class ContentHolder {
 
         this.searchResultsHolder.append(this._loadingIndicatorBox);
 
-        YTHelpers.getSearchResultsForSearchText({
-            searchText: this.searchText, pageToken: nextPageToken, numberOfResults: 30, completion: (callback) => {
+        YTHelpers.getSearchResultsForSearchText({ searchText: this.searchText, pageToken: nextPageToken, numberOfResults: 30 })
+            .finally(() => {
                 this._loadingIndicatorBox.remove();
-                if (callback.status !== NetworkResponse.successStatus) { return; }
-                const videos = this._filterDuplicatesFrom(callback.result.itemList);
+            })
+            .then((result) => {
+                const videos = this._filterDuplicatesFrom(result.itemList);
                 const searchResultsCells = videos.map((e) => getNewSearchResultsCell(e));
                 this.searchResultsHolder.append(...searchResultsCells);
 
                 const lastSearchResultCell = searchResultsCells[searchResultsCells.length - 1];
-                const newNextPageToken = callback.result.nextPageToken;
+                const newNextPageToken = result.nextPageToken;
 
                 Help.setUpPaginationObserverOn(lastSearchResultCell, () => {
                     this._fetchAndDisplayAdditionalResults(newNextPageToken);
                 });
-            }
-        });
+            });
+
     }
 
     _previouslyFetchedVideos = [];
 
     _filterDuplicatesFrom(newVideos) {
         const videosToReturn = newVideos.filter(x => {
-            return this._previouslyFetchedVideos.includesWhere(y => {x.id === y.id}) === false;
+            return this._previouslyFetchedVideos.includesWhere(y => { x.id === y.id }) === false;
         });
         this._previouslyFetchedVideos.push(...videosToReturn);
         return videosToReturn;

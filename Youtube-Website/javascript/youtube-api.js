@@ -1,5 +1,5 @@
 
-import NetworkResponse from "./helpers/NetworkResponse.js"; 
+
 
 // const ytAPIKey = "AIzaSyDvO-B0N8F6yG_Yh2_7PiEpp1r9dTHiiaE";
 
@@ -7,8 +7,8 @@ import NetworkResponse from "./helpers/NetworkResponse.js";
 
 const ytAPIKey = "AIzaSyCzmh3xADhaPmhiC5-FF1078d0_akxieOE";
 
-export class YoutubeAPIListReponse{
-    constructor(itemList, previousPageToken, nextPageToken){
+export class YoutubeAPIListReponse {
+    constructor(itemList, previousPageToken, nextPageToken) {
         this.itemList = itemList;
         this.previousPageToken = previousPageToken;
         this.nextPageToken = nextPageToken;
@@ -95,192 +95,150 @@ export class Channel {
 }
 
 
-export function getMostPopularYTVideos({numberOfVideos, pageToken, completion}) {
+export async function getMostPopularYTVideos({ numberOfVideos, pageToken }) {
 
     numberOfVideos = Math.max(Math.min(numberOfVideos, 50), 1);
     let url = `https://www.googleapis.com/youtube/v3/videos?key=${ytAPIKey}&part=snippet,statistics&chart=mostPopular&maxResults=${numberOfVideos}`;
 
-    if (pageToken !== undefined){
+    if (pageToken !== undefined) {
         url = url + "&pageToken=" + pageToken;
     }
 
-    getJsonDataFromURL(url, (callback) => {
-        const response = callback.mapSuccess((json) => {
-            const nextPageToken = json.nextPageToken;
-            const previousPageToken = json.previousPageToken;
-            const videos = json.items.map((item) => {
-                return new Video(item);
-            });
-            return new YoutubeAPIListReponse(videos, previousPageToken, nextPageToken);
-        })
-        completion(response);
-    });
+    const json = await getJsonDataFromURL(url);
+
+    const nextPageToken = json.nextPageToken;
+    const previousPageToken = json.previousPageToken;
+    const videos = json.items.map(item => new Video(item));
+
+    return new YoutubeAPIListReponse(videos, previousPageToken, nextPageToken);
 }
 
-export function getVideoObjectForVideoID(videoID, completion) {
+export async function getVideoObjectForVideoID(videoID) {
     const url = String.raw`https://www.googleapis.com/youtube/v3/videos?key=${ytAPIKey}&part=id,snippet,statistics&id=${videoID}`;
-    getJsonDataFromURL(url, (callback) => {
-        const completionResult = callback.flatMapSuccess((result) => {
-            const items = result.items;
-            if (items.length < 1) {
-                return NetworkResponse.failure("The video information could not be found for the video id provided");
-            } else {
-                const video = new Video(items[0]);
-                return NetworkResponse.success(video);
-            }
-        })
-        completion(completionResult);
-    });
+    const json = await getJsonDataFromURL(url);
+    const items = json.items;
+    if (items.length < 1) {
+        return Promise.reject("The video information could not be found for the video id provided");
+    } else {
+        const video = new Video(items[0]);
+        return video;
+    }
 }
 
 
 
 
-export function getRecommendedVideosForVideoWithVideoID({videoId, numberOfVideos, pageToken, completion}) {
+export async function getRecommendedVideosForVideoWithVideoID({ videoId, numberOfVideos, pageToken}) {
 
     numberOfVideos = Math.max(Math.min(numberOfVideos, 50), 1);
 
     let recommendedVideosURL = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&relatedToVideoId=${videoId}&part=snippet&type=video&maxResults=${numberOfVideos}`;
 
-    if (pageToken !== undefined){
+    if (pageToken !== undefined) {
         recommendedVideosURL += "&pageToken=" + pageToken;
     }
 
-    getJsonDataFromURL(recommendedVideosURL, (callback) => {
+    const json = await getJsonDataFromURL(recommendedVideosURL);
 
-        if (callback.status === NetworkResponse.failureStatus) {
-            completion(callback); return;
-        }
+    const nextPageToken = json.nextPageToken;
+    const previousPageToken = json.previousPageToken;
 
-        const nextPageToken = callback.result.nextPageToken;
-        const previousPageToken = callback.result.previousPageToken;
-    
-        const ytIDs = callback.result.items.map((item) => {
-            return item.id.videoId;
-        })
+    const ytIDs = json.items.map((item) => {
+        return item.id.videoId;
+    })
 
-        getYoutubeVideosFor(ytIDs, (callback1) => {
-            const response = callback1.mapSuccess((result) => {
-                return new YoutubeAPIListReponse(result, previousPageToken, nextPageToken);
-            });
-            completion(response);
-        });
-    });
+    const videos = await getYoutubeVideosFor(ytIDs);
+    return new YoutubeAPIListReponse(videos, previousPageToken, nextPageToken);
+
 }
 
 
 
 
-export function getCommentsForVideoWithVideoID({videoID, pageToken, numberOfComments, completion}) {
+export async function getCommentsForVideoWithVideoID({ videoID, pageToken, numberOfComments}) {
 
     numberOfComments = Math.max(Math.min(numberOfComments, 100), 1);
 
     let url = String.raw`https://www.googleapis.com/youtube/v3/commentThreads?key=${ytAPIKey}&videoId=${videoID}&maxResults=${numberOfComments}&part=snippet,id&order=relevance`;
-    if (pageToken !== undefined){
+    if (pageToken !== undefined) {
         url += "&pageToken=" + videoID;
     }
 
+    const json = await getJsonDataFromURL(url);
 
-    getJsonDataFromURL(url, (callback) => {
-
-        const response = callback.mapSuccess((json) => {
-            const nextPageToken = json.nextPageToken;
-            const previousPageToken = json.previousPageToken;
-            const itemList = json.items.map((item) => {
-                return new VideoComment(item);
-            });
-            return new YoutubeAPIListReponse(itemList, previousPageToken, nextPageToken);
-        })
-        completion(response);
+    const nextPageToken = json.nextPageToken;
+    const previousPageToken = json.previousPageToken;
+    const itemList = json.items.map((item) => {
+        return new VideoComment(item);
     });
+    return new YoutubeAPIListReponse(itemList, previousPageToken, nextPageToken);
+
 }
 
-export function getRepliesToCommentWithCommentID(commentID, completion) {
+export async function getRepliesToCommentWithCommentID(commentID) {
     const url = String.raw`https://www.googleapis.com/youtube/v3/comments?key=${ytAPIKey}&part=snippet&parentId=${commentID}&maxResults=100`;
-    getJsonDataFromURL(url, (callback) => {
-        const newResult = callback.mapSuccess((result) => {
-            return result.items.map((json) => new VideoComment(json));
-        });
-        completion(newResult);
-    });
+    const json = await getJsonDataFromURL(url);
+    return json.items.map((json) => new VideoComment(json));
 }
 
 
-export function getChannelForChannelID(channelID, completion) {
+export async function getChannelForChannelID(channelID) {
     const url = String.raw`https://www.googleapis.com/youtube/v3/channels?key=${ytAPIKey}&id=${channelID}&part=snippet,statistics`;
-    getJsonDataFromURL(url, (callback) => {
-        const response = callback.flatMapSuccess((result) => {
-            const items = result.items;
-            if (items.length > 0) {
-                return NetworkResponse.success(new Channel(items[0]));
-            } else {
-                return NetworkResponse.failure("The channel for the provided channel id could not be found.");
-            }
-        });
-        completion(response);
-    });
+    const json = await getJsonDataFromURL(url);
+    const items = json.items;
+    if (items.length > 0) {
+        return new Channel(items[0]);
+    } else {
+        return Promise.reject("The channel for the provided channel id could not be found.");
+    }
+
 }
 
-export function getSearchResultsForSearchText({searchText, numberOfResults, pageToken, completion}) {
+export async function getSearchResultsForSearchText({ searchText, numberOfResults, pageToken }) {
     numberOfResults = Math.max(Math.min(numberOfResults, 50), 1);
     let url = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&part=snippet&maxResults=${numberOfResults}&q=${searchText}`;
-    
-    if (pageToken !== undefined){
+
+    if (pageToken !== undefined) {
         url += "&pageToken=" + pageToken;
     }
-    getJsonDataFromURL(url, (callback) => {
-        if (callback.status === NetworkResponse.failureStatus) {
-            completion(callback);
-            return;
-        }
 
-        const nextPageToken = callback.result.nextPageToken;
-        const previousPageToken = callback.result.previousPageToken;
-        const videoIDs = callback.result.items.map((item) => item.id.videoId);
+    const searchResultsJson = await getJsonDataFromURL(url);
 
-        getYoutubeVideosFor(videoIDs, (callback1) => {
-            const newCallback = callback1.mapSuccess((result) => {
-                return new YoutubeAPIListReponse(result, previousPageToken, nextPageToken);
-            })
-            completion(newCallback)
-        });
+    const nextPageToken = searchResultsJson.nextPageToken;
+    const previousPageToken = searchResultsJson.previousPageToken;
+    const videoIDs = searchResultsJson.items.map((item) => item.id.videoId);
 
-    });
+    const videosArray = await getYoutubeVideosFor(videoIDs);
+
+    return new YoutubeAPIListReponse(videosArray, previousPageToken, nextPageToken);
 }
 
 
-function getYoutubeVideosFor(videoIDs, completion) {
+async function getYoutubeVideosFor(videoIDs) {
     const ytIDsString = videoIDs.join();
-
     const videoInfoURL = String.raw`https://www.googleapis.com/youtube/v3/videos?key=${ytAPIKey}&part=snippet,statistics&id=${ytIDsString}`;
+    const json = await getJsonDataFromURL(videoInfoURL);
 
-    getJsonDataFromURL(videoInfoURL, (callback) => {
-        const response = callback.mapSuccess((json) => {
-            return json.items.map((item) => {
-                return new Video(item);
-            });
-        })
-        completion(response);
+    return json.items.map((item) => {
+        return new Video(item);
     });
 }
 
 
-function getJsonDataFromURL(url, completion) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.onload = () => {
-        if (xhr.status !== 200) {
-            console.log("getJsonDataFromURL function encountered an error. Here it is: ", xhr.response);
-            const response = NetworkResponse.failure("Something went wrong when trying to fetch data from Youtube");
-            completion(response);
-            return;
-        }
-
-        const json = JSON.parse(xhr.responseText);
-        const response = NetworkResponse.success(json);
-        completion(response);
-    };
-    xhr.send();
+async function getJsonDataFromURL(url) {
+    return new Promise((success, failure) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onload = () => {
+            if (xhr.status !== 200) {
+                failure("Something went wrong when trying to fetch data from Youtube");
+                return;
+            }
+            const json = JSON.parse(xhr.responseText);
+            success(json);
+        };
+        xhr.send();
+    });
 }
 
 

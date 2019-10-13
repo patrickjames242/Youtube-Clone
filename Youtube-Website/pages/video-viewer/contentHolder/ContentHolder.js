@@ -1,7 +1,7 @@
 
 import * as Help from '/javascript/helpers.js';
 import * as YTHelpers from '/javascript/youtube-api.js';
-import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
+
 
 
 import VideoDescriptionBox from '../descriptionBox/DescriptionBox.js';
@@ -27,24 +27,18 @@ export default class ContentHolder {
 
 		this.videoCommentsBoxWrapper.startFetchingComments();
 		this.recommendedVideosBoxWrapper.startFetchingVideos();
-
-		YTHelpers.getVideoObjectForVideoID(this.videoID, (callback) => {
-			if (callback.status !== NetworkResponse.successStatus) { return; }
-			const video = callback.result;
-
-			this.videoTitleBoxWrapper.updateFromVideoObject(video);
-			this.videoDescriptionBoxWrapper.updateUsingVideoObject(video);
-			this.videoCommentsBoxWrapper.updateWithVideoObject(video);
-
-			YTHelpers.getChannelForChannelID(video.channelID, (callback2) => {
-				if (callback2.status !== NetworkResponse.successStatus) { return; }
-				const channel = callback2.result;
+		YTHelpers.getVideoObjectForVideoID(this.videoID)
+			.then((video) => {
+				this.videoTitleBoxWrapper.updateFromVideoObject(video);
+				this.videoDescriptionBoxWrapper.updateUsingVideoObject(video);
+				this.videoCommentsBoxWrapper.updateWithVideoObject(video);
+				return YTHelpers.getChannelForChannelID(video.channelID);
+			}).then((channel) => {
 				this.videoDescriptionBoxWrapper.updateUsingChannelObject(channel);
 			});
-		});
 	}
 
-	_setUpWindowResizeObserver(){
+	_setUpWindowResizeObserver() {
 		window.onresize = () => {
 			this._respondToWindowResize();
 		};
@@ -52,12 +46,12 @@ export default class ContentHolder {
 
 	_collapsedClassString = "collapsed";
 
-	get _isCollapsed(){
+	get _isCollapsed() {
 		return this.node.classList.contains(this._collapsedClassString);
 	}
 
-	set _isCollapsed(newValue){
-		if (newValue){
+	set _isCollapsed(newValue) {
+		if (newValue) {
 			this.node.classList.add(this._collapsedClassString);
 			this.recommendedVideosBoxWrapper.notifyThatBoxWasPlacedOnBottomOfDescriptionBox();
 		} else {
@@ -66,13 +60,13 @@ export default class ContentHolder {
 		}
 	}
 
-	_respondToWindowResize(){
-		if (window.innerWidth >= 1000){
-			if (this._isCollapsed){
+	_respondToWindowResize() {
+		if (window.innerWidth >= 1000) {
+			if (this._isCollapsed) {
 				this._isCollapsed = false;
 			}
 		} else {
-			if (this._isCollapsed === false){
+			if (this._isCollapsed === false) {
 				this._isCollapsed = true;
 			}
 		}

@@ -72,28 +72,29 @@ export default class RecommendedVideosBox {
         this._videosAreCurrentlyBeingFetched = true;
         this._updateShowMoreButtonVisibility();
 
-        YTHelpers.getRecommendedVideosForVideoWithVideoID({
-            videoId: this.videoID, numberOfVideos: 15, pageToken: nextPageToken, completion: (callback) => {
+        YTHelpers.getRecommendedVideosForVideoWithVideoID({ videoId: this.videoID, numberOfVideos: 15, pageToken: nextPageToken})
+            .finally(() => {
                 this._videosAreCurrentlyBeingFetched = false;
                 this.loadingIndicatorBox.isHidden = true;
                 this._updateShowMoreButtonVisibility();
-                if (callback.status !== NetworkResponse.successStatus) { return; }
-
-                const videos = this._filterThroughNewlyFetchedVideos(callback.result.itemList);
+            })
+            .then((response) => {
+                const videos = this._filterThroughNewlyFetchedVideos(response.itemList);
 
                 const recommendedVideoBoxes = videos.map(v => getRecommendedVideoBoxFor(v));
                 this.videosHolder.append(...recommendedVideoBoxes);
 
                 this._currentLastRecommendedVideoBox = recommendedVideoBoxes[recommendedVideoBoxes.length - 1];
-                this._currentNextPageToken = callback.result.nextPageToken;
+                this._currentNextPageToken = response.nextPageToken;
 
                 this._updateShowMoreButtonVisibility();
 
                 if (this._currentPosition === RecVideosBoxPosition.ON_SIDE) {
                     this._attachPaginationObserverToLastRecommendedVideoBox();
                 }
-            }
-        });
+            });
+
+
     }
 
     _previouslyFetchedVideos = [];

@@ -155,7 +155,7 @@
 	display: grid;
 	align-content: center;
 	justify-content: center;
-	height: 300px;
+	height: 100px;
 }
 
 .all-video-comments-box .loading-indicator-box .loading-indicator{
