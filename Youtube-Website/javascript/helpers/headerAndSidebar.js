@@ -136,7 +136,7 @@ function getNewSideBarNode() {
 						"Advertise",
 						"Developers"
 					].map((x) => {
-						return span({ className: "link" }, [
+						return span({ className: "link unsupported-feature-button" }, [
 							text(x)
 						])
 					}))
@@ -147,9 +147,9 @@ function getNewSideBarNode() {
 						"Terms",
 						"Privacy",
 						"Policy & Safety",
-						"Test new features"
+						"Test New Features"
 					].map((x) => {
-						return span({ className: "link" }, [
+						return span({ className: "link unsupported-feature-button" }, [
 							text(x)
 						])
 					}))
@@ -176,7 +176,7 @@ function getNewSideBarNode() {
 
 function getNewNarrowIconCell(labelTitle) {
 	const iconMethodName = String(labelTitle).toLowerCase() + "Icon"
-	return div({ className: "cell" }, [
+	return div({ className: "cell unsupported-feature-button" }, [
 		div({ className: "icon" }, [
 			...parseHTMLFrom(SVGIcons[iconMethodName]())
 		]),
@@ -188,7 +188,7 @@ function getNewNarrowIconCell(labelTitle) {
 
 function getNewWideIconCell(labelTitle) {
 	const iconMethodName = String(labelTitle).toLowerCase() + "Icon";
-	return div({ className: "cell padded-cell" }, [
+	return div({ className: "cell padded-cell unsupported-feature-button" }, [
 		div({ className: "icon" }, [
 			...parseHTMLFrom(SVGIcons[iconMethodName]())
 		]),

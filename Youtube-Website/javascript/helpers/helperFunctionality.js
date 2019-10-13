@@ -1,5 +1,5 @@
 
-import { documentDidLoadNotification, documentBodyDidChangeNotification } from "./notifications.js";
+import { documentDidLoadNotification, documentBodyDidChangeNotification, executeWhenDocumentIsLoaded } from "./notifications.js";
 import "../libraries/clamp.js";
 
 
@@ -34,15 +34,15 @@ export function applyClampToElement(element) {
 
 (() => {
 
-	const unsupportedFeatureButtonClass = "unsupported-feature-button"
-	
+	const unsupportedFeatureButtonClass = "unsupported-feature-button";
 
-	documentDidLoadNotification.anonymousListen(() => {
+	executeWhenDocumentIsLoaded(() => {
 		document.querySelectorAll("." + unsupportedFeatureButtonClass).forEach((element) => {
 			addClickListenerTo(element);
 		});
 	});
-
+	
+	
 	documentBodyDidChangeNotification.anonymousListen((records) => {
 		records.forEach((record) => {
 			record.addedNodes.forEach(function check(node){
@@ -60,7 +60,7 @@ export function applyClampToElement(element) {
 
 	function addClickListenerTo(element) {
 		element.addEventListener("click", () => {
-			alert("Oops ☹️, you're trying to use a feature I didn't feel like implementing. Don't judge me! I'm a busy man!")
+			alert("Oops ☹️, this button doesn't actually do anything. It's just here for asthetic purposes.")
 		});
 	}
 
