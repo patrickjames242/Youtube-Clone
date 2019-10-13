@@ -2,7 +2,7 @@
 
 import * as Help from '/javascript/helpers.js';
 import * as YTHelpers from '/javascript/youtube-api.js';
-import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
+
 
 Help.addStyleSheetToDocument('/pages/video-viewer/recommendedVideosBox/recommendedVideosBox.css');
 
@@ -10,7 +10,7 @@ Help.addStyleSheetToDocument('/pages/video-viewer/recommendedVideosBox/recommend
 const RecVideosBoxPosition = {
     ON_SIDE: Symbol('on_side'),
     ON_BOTTOM: Symbol('on_bottom')
-}
+};
 
 export default class RecommendedVideosBox {
 
@@ -93,8 +93,6 @@ export default class RecommendedVideosBox {
                     this._attachPaginationObserverToLastRecommendedVideoBox();
                 }
             });
-
-
     }
 
     _previouslyFetchedVideos = [];
@@ -118,7 +116,6 @@ export default class RecommendedVideosBox {
             });
         }
     }
-
 
 
     _attatchShowMoreVideosButtonClickListener() {

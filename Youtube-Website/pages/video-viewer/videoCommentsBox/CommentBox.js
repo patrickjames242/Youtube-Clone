@@ -3,7 +3,7 @@
 import { SVGIcons } from '/javascript/helpers/svg-icons.js';
 import * as Help from "/javascript/helpers.js";
 import * as YTHelpers from "/javascript/youtube-api.js";
-import NetworkResponse from "/javascript/helpers/NetworkResponse.js";
+
 
 
 export default class CommentBox {
@@ -95,13 +95,17 @@ export default class CommentBox {
 			this.isCurrentlyFetchingReplies === false) {
 			
 			this.loadingIndicatorBox.isHidden = false;
-			this.isCurrentlyFetchingReplies = true
-			YTHelpers.getRepliesToCommentWithCommentID(this.comment.id, (callback) => {
+			this.isCurrentlyFetchingReplies = true;
+			
+			YTHelpers.getRepliesToCommentWithCommentID(this.comment.id)
+			.finally(() => {
 				this.loadingIndicatorBox.isHidden = true;
 				this.isCurrentlyFetchingReplies = false;
-				if (callback.status === NetworkResponse.failureStatus) { return; }
-				this._setRepliesTo(callback.result);
-			});
+			})
+			.then((result) => {
+				this._setRepliesTo(result);
+			}); 
+			
 		}
 	}
 

@@ -35,6 +35,7 @@ export function applyClampToElement(element) {
 (() => {
 
 	const unsupportedFeatureButtonClass = "unsupported-feature-button"
+	
 
 	documentDidLoadNotification.anonymousListen(() => {
 		document.querySelectorAll("." + unsupportedFeatureButtonClass).forEach((element) => {

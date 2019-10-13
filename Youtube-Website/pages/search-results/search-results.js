@@ -1,7 +1,6 @@
 
 import * as Help from "../../javascript/helpers.js";
 import * as YTHelpers from "../../javascript/youtube-api.js";
-import NetworkResponse from "../../javascript/helpers/NetworkResponse.js";
 
 
 

@@ -3,7 +3,6 @@
 import * as Help from '/javascript/helpers.js';
 import * as YTHelpers from '/javascript/youtube-api.js';
 import CommentBox from './CommentBox.js';
-import NetworkResponse from '/javascript/helpers/NetworkResponse.js';
 
 Help.addStyleSheetToDocument('/pages/video-viewer/videoCommentsBox/videoComments.css');
 
