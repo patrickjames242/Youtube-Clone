@@ -34,6 +34,17 @@ export const documentDidLoadNotification = new Notification();
 // posted whenever the body or any of its decendents is added or removed. when posted, it includes the array of MutationRecord objects in the parameter.
 export const documentBodyDidChangeNotification = new Notification();
 
+
+// posted whenever the size of the window changes
+export const windowSizeDidChangeNotification = new Notification();
+
+(() => {
+	window.onresize = () => {
+		windowSizeDidChangeNotification.post();
+	};
+})();
+
+
 (() => {
 	let shouldPostDocumentDidLoadNotificaiton = true;
 

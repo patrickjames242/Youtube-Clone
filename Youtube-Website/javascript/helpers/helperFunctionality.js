@@ -59,9 +59,11 @@ export function applyClampToElement(element) {
 	});
 
 	function addClickListenerTo(element) {
-		element.addEventListener("click", () => {
-			alert("Oops ☹️, this button doesn't actually do anything. It's just here for asthetic purposes.")
-		});
+		element.addEventListener("click", clickListener);
+	}
+
+	const clickListener = function(){
+		alert("Oops ☹️, this button doesn't actually do anything. It's just here for asthetic purposes.")
 	}
 
 })();

@@ -1,28 +1,15 @@
 
 
 
-
-main{
-	margin-left: var(--side-bar-current-width);
-}
-
-
 /* General Stuff */
 
+
 :root{
-	--side-bar-wide-width: 240px;
-	--side-bar-narrow-width: 72px;
-	--side-bar-current-width: var(--side-bar-wide-width);
+	--side-bar-background-color: rgb(245, 245, 245);
+	--wide-side-bar-width: 240px;
+	--narrow-side-bar-width: 72px;
 }
 
-.side-bar{
-	background-color: rgb(245, 245, 245);
-	position: fixed;
-	top: var(--header-height);
-	bottom: 0;
-	overflow: scroll;
-	width: var(--side-bar-current-width);
-}
 
 .side-bar .cell{
 	cursor: pointer;
@@ -37,7 +24,7 @@ main{
 	width: 24px;
 }
 
-.side-bar .wide-content .cell .icon > svg{
+.wide-side-bar .cell .icon > svg{
 	fill: rgb(96, 96, 96);
 }
 
@@ -46,31 +33,35 @@ main{
 
 /* wide content */
 
-.side-bar .wide-content .cell-segment{
+.wide-side-bar{
+	width: var(--wide-side-bar-width);
+}
+
+.wide-side-bar .cell-segment{
 	padding: 15px 0;
 }
 
-.side-bar .wide-content .cell{
+.wide-side-bar .cell{
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	height: 40px;
 }
 
-.side-bar .wide-content .padded-cell{
+.wide-side-bar .padded-cell{
 	padding-left: 20px;
 	padding-right: 20px;
 }
 
-.side-bar .wide-content .cell .icon{
+.wide-side-bar .cell .icon{
 	margin-right: 20px;
 }
 
-.side-bar .wide-content .cell .label{
+.wide-side-bar .cell .label{
 	font-size: 14px;
 }
 
-.side-bar .wide-content .segment-title{
+.wide-side-bar .segment-title{
 	font-size: 14px;
 	font-weight: 500;
 	margin-bottom: 10px;
@@ -78,35 +69,35 @@ main{
 	text-transform: uppercase;
 }
 
-.side-bar .wide-content .sign-in-segment{
+.wide-side-bar .sign-in-segment{
 	display: grid;
 	grid-gap: 15px;
 	justify-items: start;
 }
-.side-bar .wide-content .sign-in-segment > .text{
+.wide-side-bar .sign-in-segment > .text{
 	font-size: 15px;
 	color: rgb(30, 30, 30);
 }
 
 
-.side-bar .wide-content .footer-cell-segment{
+.wide-side-bar .footer-cell-segment{
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
 
-.side-bar .wide-content .footer-cell-segment .links{
+.wide-side-bar .footer-cell-segment .links{
 	line-height: 18px;
 }
 
-.side-bar .wide-content .footer-cell-segment .links1{
+.wide-side-bar .footer-cell-segment .links1{
 	margin-bottom: 10px;
 }
 
-.side-bar .wide-content .footer-cell-segment .links2{
+.wide-side-bar .footer-cell-segment .links2{
 	margin-bottom: 20px;
 }
 
-.side-bar .wide-content .footer-cell-segment .link{
+.wide-side-bar .footer-cell-segment .link{
 	font-weight: 500;
 	font-size: 13px;
 	color: rgb(96, 96, 96);
@@ -115,18 +106,18 @@ main{
 	cursor: pointer;
 }
 
-.side-bar .wide-content .footer-cell-segment .copyright-info{
+.wide-side-bar .footer-cell-segment .copyright-info{
 	font-size: 13px;
 }
 
 
 /* narrow content */
 
-.side-bar .narrow-content{
-	display: none;
+.narrow-side-bar{
+	width: var(--narrow-side-bar-width);
 }
 
-.side-bar .narrow-content .cell{
+.narrow-side-bar .cell{
 	height: 74px;
 	display: grid;
 	justify-items: center;
@@ -134,41 +125,68 @@ main{
 	grid-gap: 5px;
 }
 
-.side-bar .narrow-content .cell .icon {
+.narrow-side-bar .cell .icon {
 	width: 24px
 }
 
-.side-bar .narrow-content .cell .icon > svg{
+.narrow-side-bar .cell .icon > svg{
 	fill: rgb(144, 144, 144);
 } 
 
-.side-bar .narrow-content .cell .label{
+.narrow-side-bar .cell .label{
 	font-size: 10px;
 	color: rgb(96, 96, 96);
 }
 
-@media(max-width: 1125px){
-	:root{
-		--side-bar-current-width: var(--side-bar-narrow-width);
-	}
+
+
+
+.slide-in-side-bar-screen{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 200;
+}
+
+.slide-in-side-bar-screen .dimmer-div{
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	opacity: 0;
+
+	transition-property: opacity;	
+	transition-duration: 0.3s;
 	
-	.side-bar .wide-content{
-		display: none;
-	}
-
-	.side-bar .narrow-content{
-		display: initial;
-	}
 }
 
-@media(max-width: 750px){
-
-	:root{
-		--side-bar-current-width: 0;
-	}
-	.side-bar{
-		display: none;
-	}
+.slide-in-side-bar-screen.presented .dimmer-div{
+	opacity: 1;
 }
 
-/* ------------------------ */
+
+
+.slide-in-side-bar-screen .side-bar-holder{
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	background-color: var(--side-bar-background-color);
+	
+	transform: translateX(calc(var(--wide-side-bar-width) * -1));
+	transition-property: transform;
+	
+	transition-duration: 0.3s;
+}
+
+.slide-in-side-bar-screen.presented .side-bar-holder{
+	transform: initial;
+}
+
+
+
+

@@ -3,49 +3,41 @@
 import { SVGIcons } from '/javascript/helpers/svg-icons.js';
 import * as Help from "/javascript/helpers.js";
 import * as YTHelpers from "/javascript/youtube-api.js";
+import NodeController from '/javascript/helpers/NodeController.js';
 
 
 
-export default class CommentBox {
+export default class CommentBox extends NodeController {
 
 	constructor(comment) {
+		super(comment);
 		this.comment = comment;
-		Object.assign(this, getCommentBoxNodeProperties(comment));
+		
 		this.readMoreButton.isHidden = true;
 		this.loadingIndicatorBox.isHidden = true;
 		this.repliesBox.isHidden = true;
 		this._configureViewRepliesButton();
-		this._addDocumentBodyDidChangeListener();
 	}
 
-	
-	_addDocumentBodyDidChangeListener(){
-		const bodyDidChangeSymbol = Symbol("comment box observer");
-
-		Help.documentBodyDidChangeNotification.listen(bodyDidChangeSymbol, (records) => {
-			for (const record of records){
-				for (const addedNode of record.addedNodes){
-					if (addedNode === this || addedNode.contains(this.node)){
-						this._collapseCommentTextIfNeeded();
-						Help.documentBodyDidChangeNotification.removeListener(bodyDidChangeSymbol);
-					}
-				}
-			}
-		});
+	nodeWasAddedToDocument() {
+		this._collapseCommentTextIfNeeded();
 	}
 
+	_commentTextHasBeenCollapsedInitally = false;
 
 	_collapseCommentTextIfNeeded() {
-		if (this.reviewTextBox.clientHeight >= 80) {
+		if (this._commentTextHasBeenCollapsedInitally === false &&
+			this.reviewTextBox.clientHeight >= 80) {
 			this.readMoreButton.isHidden = false;
 			this._toggleCommentCollapsedState();
 			this.readMoreButton.addEventListener("click", () => {
 				this._toggleCommentCollapsedState();
 			});
+			this._commentTextHasBeenCollapsedInitally = true;
 		}
 	}
 
-	_configureViewRepliesButton(){
+	_configureViewRepliesButton() {
 		const numOfReplies = this.comment.numOfReplies;
 		if (numOfReplies < 1) { return; }
 
@@ -88,24 +80,23 @@ export default class CommentBox {
 
 	isCurrentlyFetchingReplies = false;
 
-	_fetchAndDisplayRepliesIfNeeded(){
+	_fetchAndDisplayRepliesIfNeeded() {
 		const hasLoadedReplies = this.repliesHolder.children.length !== 0;
-		
+
 		if (hasLoadedReplies === false &&
 			this.isCurrentlyFetchingReplies === false) {
-			
+
 			this.loadingIndicatorBox.isHidden = false;
 			this.isCurrentlyFetchingReplies = true;
-			
+
 			YTHelpers.getRepliesToCommentWithCommentID(this.comment.id)
-			.finally(() => {
-				this.loadingIndicatorBox.isHidden = true;
-				this.isCurrentlyFetchingReplies = false;
-			})
-			.then((result) => {
-				this._setRepliesTo(result);
-			}); 
-			
+				.finally(() => {
+					this.loadingIndicatorBox.isHidden = true;
+					this.isCurrentlyFetchingReplies = false;
+				})
+				.then((result) => {
+					this._setRepliesTo(result);
+				});
 		}
 	}
 
@@ -113,9 +104,7 @@ export default class CommentBox {
 		const commentBoxes = comments.map((comment) => new CommentBox(comment))
 		const newCommentNodes = commentBoxes.map((box) => box.node);
 		this.repliesHolder.append(...newCommentNodes);
-		
 	}
-
 
 }
 
@@ -123,60 +112,56 @@ export default class CommentBox {
 
 
 
+CommentBox.getNewProperties = function(comment){
 
-
-
-
-
-// returns an object containing all the nodes as properties, that must be set on each comment box
-function getCommentBoxNodeProperties(comment){
 	const objectToReturn = {};
-	objectToReturn.node = div({className: "user-comment-box"}, [
-		div({className: "profile-image"}, [
-			img({src: comment.authorProfileImageURL})
+	objectToReturn.node = div({ className: "user-comment-box" }, [
+		div({ className: "profile-image" }, [
+			img({ src: comment.authorProfileImageURL })
 		]),
-		div({className: "right-content"}, [
-			p({className: "top-text"}, [
-				span({className: "name"}, [
+		div({ className: "right-content" }, [
+			p({ className: "top-text" }, [
+				span({ className: "name" }, [
 					text(comment.authorName)
 				]),
-				span({className: "time subtitle"}, [
+				span({ className: "time subtitle" }, [
 					text(Help.getTimeSinceDateStringFrom(comment.publishedAtDate))
 				])
 			]),
 
-			objectToReturn.reviewTextBox = p({className: "review-text"}, [
+			objectToReturn.reviewTextBox = p({ className: "review-text" }, [
 				...Help.parseHTMLFrom(comment.text)
 			]),
 
-			objectToReturn.readMoreButton = p({className: "read-more-button button"}),
+			objectToReturn.readMoreButton = p({ className: "read-more-button button" }),
 
-			div({className: "like-dislike-buttons"}, [
-				div({className: "like-button like-dislike-button unsupported-feature-button"}, [
+			div({ className: "like-dislike-buttons" }, [
+				div({ className: "like-button like-dislike-button unsupported-feature-button" }, [
 					...Help.parseHTMLFrom(SVGIcons.likeButton())
 				]),
-				div({className: "num-of-likes"}, [
+				div({ className: "num-of-likes" }, [
 					text(Help.getShortNumberStringFrom(comment.numOfLikes))
 				]),
-				div({className: "dislike-button like-dislike-button unsupported-feature-button"}, [
+				div({ className: "dislike-button like-dislike-button unsupported-feature-button" }, [
 					...Help.parseHTMLFrom(SVGIcons.dislikeButton())
 				]),
-				p({className: "reply-button uppercase-text-button unsupported-feature-button"}, [
+				p({ className: "reply-button uppercase-text-button unsupported-feature-button" }, [
 					text("reply")
 				])
 			]),
 
-			objectToReturn.viewRepliesButton = div({className: "view-replies-button button"}),
+			objectToReturn.viewRepliesButton = div({ className: "view-replies-button button" }),
 
-			objectToReturn.repliesBox = div({className: "replies-box"}, [
+			objectToReturn.repliesBox = div({ className: "replies-box" }, [
 
-				objectToReturn.loadingIndicatorBox = div({className: "replies-loading-indicator-box"}, [
-					div({className: "loading-indicator"})
+				objectToReturn.loadingIndicatorBox = div({ className: "replies-loading-indicator-box" }, [
+					div({ className: "loading-indicator" })
 				]),
 
-				objectToReturn.repliesHolder = div({className: "replies-holder"})
+				objectToReturn.repliesHolder = div({ className: "replies-holder" })
 			])
 		])
 	]);
 	return objectToReturn;
 }
+

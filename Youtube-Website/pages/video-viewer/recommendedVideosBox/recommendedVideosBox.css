@@ -73,6 +73,7 @@
 	display: grid;
 	align-content: center;
 	justify-content: center;
+	height: 60px;
 }
 
 .all-recommended-videos-box > .bottom-content-holder > .loading-indicator-box.hidden{

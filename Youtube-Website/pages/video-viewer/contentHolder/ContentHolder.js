@@ -39,9 +39,9 @@ export default class ContentHolder {
 	}
 
 	_setUpWindowResizeObserver() {
-		window.onresize = () => {
+		Help.windowSizeDidChangeNotification.anonymousListen(() => {
 			this._respondToWindowResize();
-		};
+		});
 	}
 
 	_collapsedClassString = "collapsed";

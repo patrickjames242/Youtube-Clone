@@ -1,12 +1,20 @@
 
 
 
-export function addStyleSheetToDocument(url) {
+export async function addStyleSheetToDocument(url) {
 	const link = document.createElement("link");
 	link.setAttribute("rel", "stylesheet");
 	link.setAttribute("type", "text/css");
 	link.setAttribute("href", url);
+
+	const promise = new Promise((success) => {
+		link.onload = () => {
+			success();
+		};
+	});
+	
 	document.head.append(link);
+	return promise;
 }
 
 export function getLinkToVideoViewerFile(videoID) {
@@ -125,4 +133,28 @@ Array.prototype.includesWhere = function(predicate){
 		if (predicate(item) === true){return true;}
 	}
 	return false;
+}
+
+
+// returns true if the elements of both iterable objects are equal
+function compareIterableContent(i1, i2) {
+	if (i1[Symbol.iterator] === undefined ||
+		i2[Symbol.iterator] === undefined) {
+		return false
+	};
+
+	if (i1.length !== undefined && i2.length !== undefined) {
+		if (i1.length !== i2.length) {
+			return false;
+		}
+	}
+
+	for (let i = 0; i < i1.length; i++) {
+		if (i1[i] !== i2[i]){
+			return false;
+		}
+	}
+
+	return true;
+
 }

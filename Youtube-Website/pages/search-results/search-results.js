@@ -100,11 +100,13 @@ function getNewSearchResultsCell(video) {
 const searchText = (new URL(window.location)).searchParams.get("searchText");
 
 Help.executeWhenDocumentIsLoaded(() => {
-    Help.addHeaderAndSideBarToDocument();
-    const contentHolder = new ContentHolder(searchText);
-    contentHolder.startFetchingYoutubeSearchResults();
-    document.querySelector("main").append(contentHolder.node);
-    document.querySelector(".search-box-container .search-placeholder").setAttribute("value", searchText);
+    Help.addHeaderAndSideBarToDocument()
+    .finally(() => {
+        const contentHolder = new ContentHolder(searchText);
+        contentHolder.startFetchingYoutubeSearchResults();
+        document.querySelector("main").append(contentHolder.node);
+        document.querySelector(".search-box-container .search-placeholder").setAttribute("value", searchText);
+    });
 });
 
 
