@@ -1,3 +1,3 @@
 # Youtube-Clone
 
-<p>Patrick James Hanna</p>
+<img align="center" width="400px" src="Screen Shots/screenshot-1.png">
