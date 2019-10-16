@@ -6,12 +6,12 @@
 <p>
     This website uses Javascript Modules, so it MUST be run using a server of some kind, such as Visual Studio Code's Live Server. Otherwise it will not work.
 </p>
-<p>
-    <img align="center" src="Screen Shots/screenshot-1.png"> 
-    <br>
-    <img align="center" src="Screen Shots/screenshot-2.png">
-    <br>
-    <img align="center" src="Screen Shots/screenshot-3.png">
-    <br>
-    <img align="center" src="Screen Shots/screenshot-4.png">
-</p>
+<br>
+<img src="Screen Shots/screenshot-1.png">
+<br>
+<img src="Screen Shots/screenshot-2.png">
+<br>
+<img src="Screen Shots/screenshot-3.png">
+<br>
+<img src="Screen Shots/screenshot-4.png">
+
