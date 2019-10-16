@@ -3,9 +3,6 @@ import * as Help from "../../javascript/helpers.js";
 import * as YTHelpers from "../../javascript/youtube-api.js";
 
 
-
-
-
 class ContentHolder {
 
     constructor(searchText) {
@@ -108,9 +105,6 @@ Help.executeWhenDocumentIsLoaded(() => {
         document.querySelector(".search-box-container .search-placeholder").setAttribute("value", searchText);
     });
 });
-
-
-
 
 
 

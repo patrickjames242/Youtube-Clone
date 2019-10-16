@@ -10,11 +10,9 @@ main{
 }
 
 .search-results-holder{
-    
     max-width: 862px;
     display: grid;
     grid-gap: 15px;
-    
 }
 
 .search-results-holder > .cell{

@@ -63,7 +63,7 @@ export function applyClampToElement(element) {
 	}
 
 	const clickListener = function(){
-		alert("Oops ☹️, this button doesn't actually do anything. It's just here for asthetic purposes.")
+		alert("Oops ☹️, this button doesn't actually do anything. It's just here for aesthetic purposes.")
 	}
 
 })();
