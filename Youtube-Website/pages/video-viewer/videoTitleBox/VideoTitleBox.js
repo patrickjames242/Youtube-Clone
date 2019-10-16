@@ -31,13 +31,13 @@ export default class VideoTitleBox{
             div({className: "bottom-right-content-box"}, [
                 div({className: "like-dislike-box"}, [
                     div({className: "likes"}, [
-                        div({className: "icon"}, [
+                        div({className: "icon unsupported-feature-button"}, [
                             ...Help.parseHTMLFrom(SVGIcons.likeButton())
                         ]),
                         nodes.numberOfLikesBox = p({className: "num"})
                     ]), 
                     div({className: "dislikes"}, [
-                        div({className: "icon"}, [
+                        div({className: "icon unsupported-feature-button"}, [
                             ...Help.parseHTMLFrom(SVGIcons.dislikeButton())
                         ]),
                         nodes.numberOfDislikesBox = p({className: "num"})

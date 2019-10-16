@@ -9,7 +9,7 @@ import NodeController from './NodeController.js';
 
 
 export async function addHeaderToDocument() {
-	return Promise.all([addheaderStyleSheet(), addSidebarStyleSheet()]).finally(() => {
+	return addHeaderAndSideBarStyleSheets().finally(() => {
 
 		const headerController = new HeaderController();
 		headerController.menuButton.addEventListener("click", () => {
@@ -19,14 +19,20 @@ export async function addHeaderToDocument() {
 	});
 }
 
+
+
 export async function addHeaderAndSideBarToDocument() {
-	return Promise.all([addheaderStyleSheet(), addSidebarStyleSheet()]).finally(() => {
+	return addHeaderAndSideBarStyleSheets().finally(() => {
 
 		const sideBarController = new SideBarController();
 		const headerController = new HeaderController();
 
 		headerController.menuButton.addEventListener("click", () => {
-			sideBarController.notifyThatHeaderMenuButtonWasClicked();
+			if (window.innerWidth < SideBarController.minWidthForWideSideBar){
+				document.body.prepend((new SlideInSideBarController()).node);
+			} else {
+				sideBarController.notifyThatHeaderMenuButtonWasClicked();
+			}
 		});
 
 		document.body.prepend(headerController.node, sideBarController.node);
@@ -34,13 +40,11 @@ export async function addHeaderAndSideBarToDocument() {
 	})
 }
 
-async function addheaderStyleSheet() {
-	return HelperFunctions.addStyleSheetToDocument('/css/header.css');
+async function addHeaderAndSideBarStyleSheets(){
+	const promises = ['/css/header.css', '/css/sidebar.css'].map(x => HelperFunctions.addStyleSheetToDocument(x));
+	return Promise.all(promises);
 }
 
-async function addSidebarStyleSheet() {
-	return HelperFunctions.addStyleSheetToDocument('/css/sidebar.css');
-}
 
 class HeaderController extends NodeController {
 
@@ -124,6 +128,8 @@ function getNewHeaderProperties() {
 
 class SideBarController extends NodeController {
 
+	
+
 
 	constructor() {
 		super();
@@ -162,12 +168,14 @@ class SideBarController extends NodeController {
 		NONE: Symbol("none")
 	}
 
+	static minWidthForWideSideBar = 1125;
+	static minWidthForNarrowSideBar = 750;
 
 	_currentDesiredSideBarType() {
 		const width = window.innerWidth;
-		if (width > 1125 && this._userWantsToMinimizeSideBar === false) {
+		if (width > SideBarController.minWidthForWideSideBar && this._userWantsToMinimizeSideBar === false) {
 			return SideBarController.SideBarType.WIDE;
-		} else if (width > 750) {
+		} else if (width > SideBarController.minWidthForNarrowSideBar) {
 			return SideBarController.SideBarType.NARROW;
 		} else {
 			return SideBarController.SideBarType.NONE;
@@ -234,8 +242,6 @@ class SlideInSideBarController extends NodeController{
 		super();
 		this._addDimmerDivClickListener();
 	}
-
-	
 
 	nodeWasAddedToDocument(){
 		setTimeout(() => {
@@ -385,13 +391,6 @@ function getNewWideSideBarNode() {
 	])
 
 }
-
-
-
-
-
-
-
 
 
 
