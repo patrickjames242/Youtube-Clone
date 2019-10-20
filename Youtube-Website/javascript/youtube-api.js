@@ -196,7 +196,7 @@ export async function getChannelForChannelID(channelID) {
 
 export async function getSearchResultsForSearchText({ searchText, numberOfResults, pageToken }) {
     numberOfResults = Math.max(Math.min(numberOfResults, 50), 1);
-    let url = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&part=snippet&maxResults=${numberOfResults}&q=${searchText}`;
+    let url = String.raw`https://www.googleapis.com/youtube/v3/search?key=${ytAPIKey}&part=snippet&maxResults=${numberOfResults}&q=${searchText}&type=video`;
 
     if (pageToken !== undefined) {
         url += "&pageToken=" + pageToken;
