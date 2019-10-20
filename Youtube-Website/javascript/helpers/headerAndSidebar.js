@@ -273,7 +273,7 @@ class SlideInSideBarController extends NodeController{
 
 		properties.node = div({className: "slide-in-side-bar-screen"}, [
 			properties.dimmerDiv = div({className: "dimmer-div"}),
-			div({className: "side-bar-holder"}, [
+			div({className: "side-bar-holder", style: "overflow: scroll;"}, [
 				getNewWideSideBarNode()
 			])
 		]);
